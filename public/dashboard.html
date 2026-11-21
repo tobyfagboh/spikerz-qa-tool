@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spikerz QA Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+    .header { background: #1e293b; border-bottom: 1px solid #334155; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 1.25rem; font-weight: 600; }
+    .header h1 span { color: #60a5fa; }
+    .header .actions { display: flex; gap: 8px; }
+    .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all 0.15s; }
+    .btn-primary { background: #3b82f6; color: #fff; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-outline { background: transparent; border: 1px solid #475569; color: #94a3b8; }
+    .btn-outline:hover { border-color: #60a5fa; color: #60a5fa; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+
+    /* Stat cards */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; }
+    .stat-card .label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .stat-card .value { font-size: 1.75rem; font-weight: 700; }
+    .stat-card .value.green { color: #4ade80; }
+    .stat-card .value.red { color: #f87171; }
+    .stat-card .value.amber { color: #fbbf24; }
+    .stat-card .value.blue { color: #60a5fa; }
+
+    /* Platform health grid */
+    .section-title { font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #cbd5e1; }
+    .platform-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    .platform-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; text-align: center; }
+    .platform-card .name { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+    .platform-card .count { font-size: 2rem; font-weight: 700; }
+    .platform-card .detail { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+    .platform-card.linkedin { border-top: 3px solid #0a66c2; }
+    .platform-card.facebook { border-top: 3px solid #1877f2; }
+    .platform-card.instagram { border-top: 3px solid #e4405f; }
+    .platform-card.tiktok { border-top: 3px solid #00f2ea; }
+    .platform-card.x { border-top: 3px solid #94a3b8; }
+
+    /* Day tabs */
+    .day-tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+    .day-tab { padding: 8px 20px; border-radius: 6px; background: #1e293b; border: 1px solid #334155; color: #94a3b8; cursor: pointer; font-size: 0.85rem; transition: all 0.15s; }
+    .day-tab.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+    .day-tab:hover:not(.active) { border-color: #60a5fa; color: #60a5fa; }
+
+    /* Account table */
+    .table-container { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px 16px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; border-bottom: 1px solid #334155; background: #1a2332; }
+    td { padding: 10px 16px; border-bottom: 1px solid #1e293b; font-size: 0.85rem; }
+    tr:hover td { background: #263344; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+    .badge-green { background: rgba(74,222,128,0.15); color: #4ade80; }
+    .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
+    .badge-amber { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .badge-gray { background: rgba(148,163,184,0.15); color: #94a3b8; }
+    .badge-blue { background: rgba(96,165,250,0.15); color: #60a5fa; }
+
+    /* Issues panel */
+    .issue-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; }
+    .issue-card .issue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .issue-card .issue-title { font-size: 0.85rem; font-weight: 500; }
+    .issue-card .issue-desc { font-size: 0.8rem; color: #94a3b8; }
+
+    .loading { text-align: center; padding: 40px; color: #64748b; }
+    .two-col { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } .platform-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .platform-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>Spikerz</span> QA Dashboard</h1>
+  <div class="actions">
+    <button class="btn btn-outline" onclick="loadAccounts()">Refresh</button>
+    <button class="btn btn-primary" onclick="runHealthCheck()">Run Health Check</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Stat Cards -->
+  <div class="stats" id="stats">
+    <div class="stat-card"><div class="label">Total Accounts</div><div class="value blue" id="stat-total">—</div></div>
+    <div class="stat-card"><div class="label">Connected</div><div class="value green" id="stat-connected">—</div></div>
+    <div class="stat-card"><div class="label">Disconnected</div><div class="value red" id="stat-disconnected">—</div></div>
+    <div class="stat-card"><div class="label">Issues</div><div class="value amber" id="stat-issues">—</div></div>
+    <div class="stat-card"><div class="label">Days Monitored</div><div class="value blue" id="stat-days">—</div></div>
+  </div>
+
+  <!-- Platform Cards -->
+  <h3 class="section-title">Health by Platform</h3>
+  <div class="platform-grid" id="platform-grid"></div>
+
+  <!-- Day Tabs + Table -->
+  <h3 class="section-title">Health Check Results</h3>
+  <div class="day-tabs" id="day-tabs"></div>
+
+  <div class="two-col">
+    <div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Account</th>
+              <th>Status</th>
+              <th>Connection</th>
+              <th>Token</th>
+              <th>Permissions</th>
+              <th>Response</th>
+            </tr>
+          </thead>
+          <tbody id="check-table-body">
+            <tr><td colspan="7" class="loading">Select a day to view results</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="section-title">Issues</h3>
+      <div id="issues-panel"><div class="loading">No issues yet</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API = '';
+
+  async function loadAccounts() {
+    try {
+      const res = await fetch(`${API}/api/accounts`);
+      const data = await res.json();
+      if (!data.success) return;
+
+      const accounts = data.data;
+      document.getElementById('stat-total').textContent = accounts.length;
+      document.getElementById('stat-connected').textContent = accounts.filter(a => a.connection_status === 'connected').length;
+      document.getElementById('stat-disconnected').textContent = accounts.filter(a => a.connection_status !== 'connected').length;
+
+      // Platform grid
+      const platforms = ['linkedin', 'facebook', 'instagram', 'tiktok', 'x'];
+      const grid = document.getElementById('platform-grid');
+      grid.innerHTML = platforms.map(p => {
+        const pAccounts = accounts.filter(a => a.platform === p);
+        const connected = pAccounts.filter(a => a.connection_status === 'connected').length;
+        return `<div class="platform-card ${p}">
+          <div class="name">${p === 'x' ? 'X (Twitter)' : p.charAt(0).toUpperCase() + p.slice(1)}</div>
+          <div class="count" style="color: ${connected === pAccounts.length ? '#4ade80' : '#fbbf24'}">${connected}/${pAccounts.length}</div>
+          <div class="detail">connected</div>
+        </div>`;
+      }).join('');
+    } catch (err) {
+      console.error('Failed to load accounts:', err);
+    }
+  }
+
+  async function loadDayTabs() {
+    const tabs = document.getElementById('day-tabs');
+    let maxDay = 0;
+    for (let d = 1; d <= 5; d++) {
+      try {
+        const res = await fetch(`${API}/api/health-checks/day/${d}`);
+        const data = await res.json();
+        if (data.data && data.data.length > 0) maxDay = d;
+      } catch (e) {}
+    }
+    document.getElementById('stat-days').textContent = maxDay;
+
+    tabs.innerHTML = '';
+    for (let d = 1; d <= 5; d++) {
+      const tab = document.createElement('div');
+      tab.className = 'day-tab' + (d === maxDay ? ' active' : '');
+      tab.textContent = `Day ${d}`;
+      tab.onclick = () => loadDay(d);
+      tabs.appendChild(tab);
+    }
+
+    if (maxDay > 0) loadDay(maxDay);
+  }
+
+  async function loadDay(dayNumber) {
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.day-tab').forEach(t => { if (t.textContent === `Day ${dayNumber}`) t.classList.add('active'); });
+
+    try {
+      const res = await fetch(`${API}/api/health-checks/day/${dayNumber}`);
+      const data = await res.json();
+      const tbody = document.getElementById('check-table-body');
+
+      if (!data.data || data.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="loading">No results for Day ' + dayNumber + '</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.data.map(c => {
+        const errors = c.errors || [];
+        const warnings = c.warnings || [];
+        return `<tr>
+          <td><strong>${(c.platform || '').toUpperCase()}</strong></td>
+          <td>${c.account_name}</td>
+          <td><span class="badge ${c.account_status === 'active' ? 'badge-green' : c.account_status === 'restricted' ? 'badge-amber' : 'badge-red'}">${c.account_status}</span></td>
+          <td><span class="badge ${c.connection_status === 'connected' ? 'badge-green' : 'badge-red'}">${c.connection_status}</span></td>
+          <td><span class="badge ${c.token_validity === 'valid' ? 'badge-green' : c.token_validity === 'expiring_soon' ? 'badge-amber' : c.token_validity === 'expired' ? 'badge-red' : 'badge-gray'}">${c.token_validity}</span></td>
+          <td><span class="badge ${c.permission_status === 'ok' ? 'badge-green' : c.permission_status === 'partial' ? 'badge-amber' : 'badge-red'}">${c.permission_status}</span></td>
+          <td>${c.response_time_ms}ms</td>
+        </tr>`;
+      }).join('');
+    } catch (err) {
+      console.error('Failed to load day:', err);
+    }
+  }
+
+  async function loadIssues() {
+    try {
+      const res = await fetch(`${API}/api/health-checks/issues`);
+      const data = await res.json();
+      const panel = document.getElementById('issues-panel');
+      document.getElementById('stat-issues').textContent = data.count || 0;
+
+      if (!data.data || data.data.length === 0) {
+        panel.innerHTML = '<div class="loading">No issues detected</div>';
+        return;
+      }
+
+      panel.innerHTML = data.data.slice(0, 10).map(i => `
+        <div class="issue-card">
+          <div class="issue-header">
+            <span class="badge ${i.severity === 'critical' || i.severity === 'high' ? 'badge-red' : 'badge-amber'}">${i.severity}</span>
+            <span class="badge badge-gray">${i.status}</span>
+          </div>
+          <div class="issue-title">${i.title}</div>
+          <div class="issue-desc">${(i.description || '').split('\n')[0]}</div>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('Failed to load issues:', err);
+    }
+  }
+
+  async function runHealthCheck() {
+    const dayInput = prompt('Enter day number (1-5):');
+    if (!dayInput) return;
+    const day = parseInt(dayInput);
+    if (isNaN(day) || day < 1 || day > 5) { alert('Day must be 1-5'); return; }
+
+    try {
+      const res = await fetch(`${API}/api/health-checks/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ day_number: day })
+      });
+      const data = await res.json();
+      alert(`Health check complete: ${data.data.healthy}/${data.data.total} healthy, ${data.data.errors} errors`);
+      loadAccounts();
+      loadDay(day);
+      loadIssues();
+      loadDayTabs();
+    } catch (err) {
+      alert('Health check failed: ' + err.message);
+    }
+  }
+
+  // Initial load
+  loadAccounts();
+  loadIssues();
+  loadDayTabs();
+</script>
+</body>
+</html>

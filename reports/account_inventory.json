@@ -1,0 +1,377 @@
+[
+  {
+    "id": "LI-001",
+    "platform": "linkedin",
+    "account_type": "personal",
+    "account_name": "LI-01 QA Test Profile",
+    "account_handle": "qa-test-li-01",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "profile_feed",
+      "connections_list"
+    ],
+    "permissions": [
+      "r_liteprofile",
+      "r_emailaddress",
+      "w_member_social"
+    ],
+    "credential_ref_id": "VAULT_LI_001",
+    "notes": "Primary LinkedIn test profile. Used for post scheduling and engagement monitoring tests.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "LI-002",
+    "platform": "linkedin",
+    "account_type": "page",
+    "account_name": "LI-02 QA Company Page",
+    "account_handle": "qa-test-company",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "company_page",
+      "analytics"
+    ],
+    "permissions": [
+      "r_liteprofile",
+      "r_emailaddress",
+      "w_member_social"
+    ],
+    "credential_ref_id": "VAULT_LI_002",
+    "notes": "LinkedIn company page for testing organizational content features.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "LI-003",
+    "platform": "linkedin",
+    "account_type": "personal",
+    "account_name": "LI-03 QA Secondary Profile",
+    "account_handle": "qa-test-li-03",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "profile_feed"
+    ],
+    "permissions": [
+      "r_liteprofile",
+      "r_emailaddress",
+      "w_member_social"
+    ],
+    "credential_ref_id": "VAULT_LI_003",
+    "notes": "Secondary LinkedIn profile for multi-account interaction testing. Token set to expire during monitoring.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "FB-001",
+    "platform": "facebook",
+    "account_type": "profile",
+    "account_name": "FB-01 QA Test Profile",
+    "account_handle": "qa.test.fb.01",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "timeline",
+      "friends_list"
+    ],
+    "permissions": [
+      "pages_show_list",
+      "pages_read_engagement",
+      "pages_manage_posts"
+    ],
+    "credential_ref_id": "VAULT_FB_001",
+    "notes": "Primary Facebook test profile for social monitoring features.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "FB-002",
+    "platform": "facebook",
+    "account_type": "page",
+    "account_name": "FB-02 QA Business Page",
+    "account_handle": "QATestPage",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "page_feed",
+      "page_insights",
+      "messenger"
+    ],
+    "permissions": [
+      "pages_show_list",
+      "pages_read_engagement",
+      "pages_manage_posts"
+    ],
+    "credential_ref_id": "VAULT_FB_002",
+    "notes": "Facebook business page for testing post management and messaging features. Session-based auth.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "FB-003",
+    "platform": "facebook",
+    "account_type": "page",
+    "account_name": "FB-03 QA Community Page",
+    "account_handle": "QACommunityTest",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "page_feed",
+      "community_groups"
+    ],
+    "permissions": [
+      "pages_show_list",
+      "pages_read_engagement",
+      "pages_manage_posts"
+    ],
+    "credential_ref_id": "VAULT_FB_003",
+    "notes": "Facebook community page for testing group integration and moderation features.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "IG-001",
+    "platform": "instagram",
+    "account_type": "business",
+    "account_name": "IG-01 QA Business Account",
+    "account_handle": "@qa_test_ig_01",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "media_feed",
+      "stories",
+      "insights"
+    ],
+    "permissions": [
+      "instagram_basic",
+      "instagram_content_publish",
+      "instagram_manage_insights"
+    ],
+    "credential_ref_id": "VAULT_IG_001",
+    "notes": "Primary Instagram business account for content publishing and insights testing.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "IG-002",
+    "platform": "instagram",
+    "account_type": "creator",
+    "account_name": "IG-02 QA Creator Account",
+    "account_handle": "@qa_test_ig_02",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "media_feed",
+      "reels",
+      "insights"
+    ],
+    "permissions": [
+      "instagram_basic",
+      "instagram_content_publish",
+      "instagram_manage_insights"
+    ],
+    "credential_ref_id": "VAULT_IG_002",
+    "notes": "Instagram creator account for testing Reels and creator-specific features.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "IG-003",
+    "platform": "instagram",
+    "account_type": "personal",
+    "account_name": "IG-03 QA Personal Account",
+    "account_handle": "@qa_test_ig_03",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "media_feed"
+    ],
+    "permissions": [
+      "instagram_basic",
+      "instagram_content_publish",
+      "instagram_manage_insights"
+    ],
+    "credential_ref_id": "VAULT_IG_003",
+    "notes": "Personal Instagram account for testing limited-permission scenarios.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "TT-001",
+    "platform": "tiktok",
+    "account_type": "business",
+    "account_name": "TT-01 QA Business Account",
+    "account_handle": "@qa_test_tt_01",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "video_feed",
+      "analytics"
+    ],
+    "permissions": [
+      "user.info.basic",
+      "video.list",
+      "video.publish"
+    ],
+    "credential_ref_id": "VAULT_TT_001",
+    "notes": "Primary TikTok business account for video management testing.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "TT-002",
+    "platform": "tiktok",
+    "account_type": "creator",
+    "account_name": "TT-02 QA Creator Account",
+    "account_handle": "@qa_test_tt_02",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "video_feed",
+      "comments"
+    ],
+    "permissions": [
+      "user.info.basic",
+      "video.list",
+      "video.publish"
+    ],
+    "credential_ref_id": "VAULT_TT_002",
+    "notes": "TikTok creator account. Sandbox mode with daily API quota limits.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "TT-003",
+    "platform": "tiktok",
+    "account_type": "personal",
+    "account_name": "TT-03 QA Personal Account",
+    "account_handle": "@qa_test_tt_03",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "restricted",
+    "connection_status": "connected",
+    "connected_assets": [
+      "video_feed"
+    ],
+    "permissions": [
+      "user.info.basic",
+      "video.list",
+      "video.publish"
+    ],
+    "credential_ref_id": "VAULT_TT_003",
+    "notes": "Personal TikTok account for limited-scope testing. Watch for automated activity flags.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "X-001",
+    "platform": "x",
+    "account_type": "business",
+    "account_name": "X-01 QA Business Account",
+    "account_handle": "@qa_test_x_01",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "timeline",
+      "mentions",
+      "analytics"
+    ],
+    "permissions": [
+      "tweet.read",
+      "tweet.write",
+      "users.read"
+    ],
+    "credential_ref_id": "VAULT_X_001",
+    "notes": "Primary X/Twitter business account for tweet management and monitoring features.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "X-002",
+    "platform": "x",
+    "account_type": "personal",
+    "account_name": "X-02 QA Personal Account",
+    "account_handle": "@qa_test_x_02",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "timeline",
+      "mentions"
+    ],
+    "permissions": [
+      "tweet.read",
+      "tweet.write",
+      "users.read"
+    ],
+    "credential_ref_id": "VAULT_X_002",
+    "notes": "Personal X account for testing user-level features and DM monitoring.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  },
+  {
+    "id": "X-003",
+    "platform": "x",
+    "account_type": "personal",
+    "account_name": "X-03 QA Interaction Account",
+    "account_handle": "@qa_test_x_03",
+    "environment": "test",
+    "owner": "qa-team",
+    "status": "active",
+    "connection_status": "connected",
+    "connected_assets": [
+      "timeline"
+    ],
+    "permissions": [
+      "tweet.read",
+      "tweet.write",
+      "users.read"
+    ],
+    "credential_ref_id": "VAULT_X_003",
+    "notes": "X account with read-only permissions for testing interaction monitoring without write access.",
+    "last_health_check": "2026-11-21T09:08:09.701Z",
+    "created_at": "2026-11-21 09:08:06",
+    "updated_at": "2026-11-21 09:08:09"
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "name": "spikerz-qa-tool",
+  "version": "1.0.0",
+  "description": "QA Test Account Management and Monitoring System for Spikerz",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js --dev",
+    "health-check": "node src/cli.js health-check",
+    "health-check:simulate": "node src/cli.js health-check --simulate-days 5",
+    "report": "node src/cli.js report",
+    "report:final": "node src/cli.js report --final",
+    "seed": "node src/cli.js seed",
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": ["qa", "testing", "automation", "social-media", "monitoring"],
+  "author": "QaTechBro",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "cors": "^2.8.5",
+    "csv-stringify": "^6.5.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0",
+    "node-cron": "^3.0.3",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
