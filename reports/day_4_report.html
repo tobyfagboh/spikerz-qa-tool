@@ -10,13 +10,13 @@
     .container { max-width: 1100px; margin: 0 auto; }
     h1 { font-size: 1.5rem; margin-bottom: 4px; }
     .subtitle { color: #666; margin-bottom: 24px; font-size: 0.9rem; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
     .card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .card .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
     .card .value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; }
-    .card .value.green { color: #16a34a; }
-    .card .value.red { color: #dc2626; }
-    .card .value.amber { color: #d97706; }
+    .card .value.green, .green { color: #16a34a; }
+    .card .value.red, .red { color: #dc2626; }
+    .card .value.amber, .amber { color: #d97706; }
     table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
     th { background: #f8f8f8; text-align: left; padding: 10px 12px; font-size: 0.75rem; text-transform: uppercase; color: #666; border-bottom: 2px solid #eee; }
     td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
@@ -26,54 +26,26 @@
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-amber { background: #fef3c7; color: #92400e; }
     .badge-gray { background: #f3f4f6; color: #374151; }
-    .section-title { font-size: 1.1rem; margin: 24px 0 12px; }
-  </style>
+    .section-title { font-size: 1.1rem; margin: 24px 0 12px; }</style>
 </head>
 <body>
 <div class="container">
   <h1>Spikerz QA Health Check Report - Day 4</h1>
-  <p class="subtitle">Generated: 2026-11-22T09:37:34.138Z</p>
+  <p class="subtitle">Generated: 2026-11-22T09:50:15.083Z</p>
 
   <div class="cards">
-    <div class="card">
-      <div class="label">Total Accounts</div>
-      <div class="value">15</div>
-    </div>
-    <div class="card">
-      <div class="label">Connected</div>
-      <div class="value green">14</div>
-    </div>
-    <div class="card">
-      <div class="label">Disconnected</div>
-      <div class="value red">1</div>
-    </div>
-    <div class="card">
-      <div class="label">Errors</div>
-      <div class="value red">2</div>
-    </div>
-    <div class="card">
-      <div class="label">Warnings</div>
-      <div class="value amber">1</div>
-    </div>
-    <div class="card">
-      <div class="label">Avg Response</div>
-      <div class="value">138ms</div>
-    </div>
+    <div class="card"><div class="label">Total Accounts</div><div class="value">15</div></div>
+    <div class="card"><div class="label">Connected</div><div class="value green">14</div></div>
+    <div class="card"><div class="label">Disconnected</div><div class="value red">1</div></div>
+    <div class="card"><div class="label">Errors</div><div class="value red">2</div></div>
+    <div class="card"><div class="label">Warnings</div><div class="value amber">1</div></div>
+    <div class="card"><div class="label">Avg Response</div><div class="value">117ms</div></div>
   </div>
 
   <h2 class="section-title">Account Health Details</h2>
   <table>
     <thead>
-      <tr>
-        <th>Platform</th>
-        <th>Account</th>
-        <th>Status</th>
-        <th>Connection</th>
-        <th>Token</th>
-        <th>Permissions</th>
-        <th>Errors</th>
-        <th>Response</th>
-      </tr>
+      <tr><th>Platform</th><th>Account</th><th>Status</th><th>Connection</th><th>Token</th><th>Permissions</th><th>Errors</th><th>Response</th></tr>
     </thead>
     <tbody>
       
@@ -85,7 +57,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>225ms</td>
+        <td>144ms</td>
       </tr>
       <tr>
         <td><strong>FACEBOOK</strong></td>
@@ -95,7 +67,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>70ms</td>
+        <td>102ms</td>
       </tr>
       <tr>
         <td><strong>FACEBOOK</strong></td>
@@ -105,7 +77,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>86ms</td>
+        <td>72ms</td>
       </tr>
       <tr>
         <td><strong>INSTAGRAM</strong></td>
@@ -115,7 +87,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>160ms</td>
+        <td>70ms</td>
       </tr>
       <tr>
         <td><strong>INSTAGRAM</strong></td>
@@ -125,7 +97,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>218ms</td>
+        <td>159ms</td>
       </tr>
       <tr>
         <td><strong>INSTAGRAM</strong></td>
@@ -135,7 +107,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>109ms</td>
+        <td>63ms</td>
       </tr>
       <tr>
         <td><strong>LINKEDIN</strong></td>
@@ -145,7 +117,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>228ms</td>
+        <td>97ms</td>
       </tr>
       <tr>
         <td><strong>LINKEDIN</strong></td>
@@ -155,7 +127,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>68ms</td>
+        <td>64ms</td>
       </tr>
       <tr>
         <td><strong>LINKEDIN</strong></td>
@@ -165,7 +137,7 @@
         <td><span class="badge badge-red">expired</span></td>
         <td><span class="badge badge-red">revoked</span></td>
         <td><span class="badge badge-red">Token expired - requires re-authentication; Permissions revoked: Token expired</span></td>
-        <td>110ms</td>
+        <td>86ms</td>
       </tr>
       <tr>
         <td><strong>TIKTOK</strong></td>
@@ -175,7 +147,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>117ms</td>
+        <td>157ms</td>
       </tr>
       <tr>
         <td><strong>TIKTOK</strong></td>
@@ -185,7 +157,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>87ms</td>
+        <td>76ms</td>
       </tr>
       <tr>
         <td><strong>TIKTOK</strong></td>
@@ -195,7 +167,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>234ms</td>
+        <td>154ms</td>
       </tr>
       <tr>
         <td><strong>X</strong></td>
@@ -205,7 +177,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>76ms</td>
+        <td>227ms</td>
       </tr>
       <tr>
         <td><strong>X</strong></td>
@@ -215,7 +187,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>113ms</td>
+        <td>203ms</td>
       </tr>
       <tr>
         <td><strong>X</strong></td>
@@ -225,7 +197,7 @@
         <td><span class="badge badge-green">valid</span></td>
         <td><span class="badge badge-green">ok</span></td>
         <td><span class="badge badge-green">None</span></td>
-        <td>169ms</td>
+        <td>78ms</td>
       </tr>
     </tbody>
   </table>
@@ -240,7 +212,7 @@
         <td><span class="badge badge-red">high</span></td>
         <td>[Day 4] LINKEDIN - LI-03 QA Secondary Profile: Token expired - requires re-authentication; Permissions revoked: Token expired</td>
         <td><span class="badge badge-gray">open</span></td>
-        <td>2026-11-22 09:37:34</td>
+        <td>2026-11-22 09:50:15</td>
       </tr>
     </tbody>
   </table>

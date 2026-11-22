@@ -34,7 +34,7 @@ The data layer uses SQLite with a relational schema (accounts, health_checks, ma
 
 4. **Richer dashboard** — Add historical trend charts (health over time), account detail drill-down, one-click reconnection, and a maintenance log timeline view.
 
-5. **CI/CD pipeline** — Add GitHub Actions workflow that runs tests, generates a coverage report, and produces a health check summary on each push.
+5. **CI/CD pipeline** — *(Implemented)* Added a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs tests on Node 18.x and 20.x, generates coverage reports, runs the full 5-day simulation, and uploads report artifacts. With more time, I would add deployment stages and environment promotion gates.
 
 6. **Audit trail** — Track who changed each account record and when, with a full change history. The database schema supports this but the feature isn't implemented.
 

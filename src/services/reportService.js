@@ -259,10 +259,22 @@ class ReportService {
   }
 
   /**
-   * Generate an HTML report.
+   * Generate an HTML report — handles both daily and final report structures.
    */
   _generateHtmlReport(report) {
-    const summary = report.summary || report.monitoring_period || {};
+    const isFinal = !!report.monitoring_period;
+
+    if (isFinal) {
+      return this._generateFinalHtmlReport(report);
+    }
+    return this._generateDailyHtmlReport(report);
+  }
+
+  /**
+   * Generate a daily HTML report.
+   */
+  _generateDailyHtmlReport(report) {
+    const summary = report.summary || {};
     const checks = report.checks || [];
 
     return `<!DOCTYPE html>
@@ -271,19 +283,279 @@ class ReportService {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${report.title}</title>
-  <style>
+  <style>${this._getReportStyles()}</style>
+</head>
+<body>
+<div class="container">
+  <h1>${report.title}</h1>
+  <p class="subtitle">Generated: ${report.generated_at}</p>
+
+  <div class="cards">
+    <div class="card"><div class="label">Total Accounts</div><div class="value">${summary.total_accounts || 0}</div></div>
+    <div class="card"><div class="label">Connected</div><div class="value green">${summary.connected || 0}</div></div>
+    <div class="card"><div class="label">Disconnected</div><div class="value red">${summary.disconnected || 0}</div></div>
+    <div class="card"><div class="label">Errors</div><div class="value red">${summary.total_errors || 0}</div></div>
+    <div class="card"><div class="label">Warnings</div><div class="value amber">${summary.total_warnings || 0}</div></div>
+    <div class="card"><div class="label">Avg Response</div><div class="value">${summary.avg_response_time_ms || 0}ms</div></div>
+  </div>
+
+  <h2 class="section-title">Account Health Details</h2>
+  <table>
+    <thead>
+      <tr><th>Platform</th><th>Account</th><th>Status</th><th>Connection</th><th>Token</th><th>Permissions</th><th>Errors</th><th>Response</th></tr>
+    </thead>
+    <tbody>
+      ${checks.map(c => `
+      <tr>
+        <td><strong>${(c.platform || '').toUpperCase()}</strong></td>
+        <td>${c.account_name || c.account_id}</td>
+        <td>${this._badge(c.account_status, c.account_status === 'active' ? 'green' : 'red')}</td>
+        <td>${this._badge(c.connection_status, c.connection_status === 'connected' ? 'green' : 'red')}</td>
+        <td>${this._badge(c.token_validity, c.token_validity === 'valid' ? 'green' : c.token_validity === 'expiring_soon' ? 'amber' : 'red')}</td>
+        <td>${this._badge(c.permission_status, c.permission_status === 'ok' ? 'green' : c.permission_status === 'partial' ? 'amber' : 'red')}</td>
+        <td>${(c.errors || []).length > 0 ? '<span class="badge badge-red">' + (c.errors || []).join('; ') + '</span>' : '<span class="badge badge-green">None</span>'}</td>
+        <td>${c.response_time_ms}ms</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+
+  ${this._issuesTableHtml(report.issues)}
+</div>
+</body>
+</html>`;
+  }
+
+  /**
+   * Generate the comprehensive final HTML report with all sections.
+   */
+  _generateFinalHtmlReport(report) {
+    const mp = report.monitoring_period || {};
+    const inv = report.account_inventory || {};
+    const dailySummaries = report.daily_summaries || [];
+    const issues = (report.issues_summary || {}).details || [];
+    const issuesSummary = report.issues_summary || {};
+    const maintenance = (report.maintenance_log_summary || {}).entries || [];
+    const recommendations = report.recommendations || [];
+
+    // Date range from daily summaries
+    const dateLabels = ['Nov 18', 'Nov 19', 'Nov 20', 'Nov 21', 'Nov 22'];
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${report.title}</title>
+  <style>${this._getReportStyles()}
+    .hero { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: #fff; border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+    .hero h1 { font-size: 1.6rem; color: #fff; margin-bottom: 8px; }
+    .hero .subtitle { color: #94a3b8; }
+    .hero .meta { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+    .hero .meta-item { font-size: 0.85rem; color: #cbd5e1; }
+    .hero .meta-item strong { color: #fff; }
+    .section { margin-bottom: 32px; }
+    .platform-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    .platform-card { background: #fff; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .platform-card .platform-name { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 4px; }
+    .platform-card .platform-count { font-size: 1.8rem; font-weight: 700; color: #1e293b; }
+    .trend-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px; }
+    .trend-cell { background: #fff; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .trend-cell .day-label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+    .trend-cell .day-val { font-size: 1.2rem; font-weight: 700; margin: 4px 0; }
+    .trend-cell .day-detail { font-size: 0.7rem; color: #666; }
+    .rec-card { background: #fff; border-left: 4px solid #3b82f6; border-radius: 0 8px 8px 0; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .rec-card.high { border-left-color: #dc2626; }
+    .rec-card.medium { border-left-color: #d97706; }
+    .rec-card.low { border-left-color: #16a34a; }
+    .rec-card .rec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .rec-card .rec-area { font-weight: 600; font-size: 0.95rem; }
+    .rec-card .rec-text { font-size: 0.85rem; color: #555; line-height: 1.5; }
+    .log-entry { display: grid; grid-template-columns: 100px 90px 1fr auto; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #f0f0f0; align-items: center; font-size: 0.85rem; }
+    .log-entry:hover { background: #fafafa; }
+    .log-header { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #666; background: #f8f8f8; border-bottom: 2px solid #eee; }
+    @media (max-width: 768px) {
+      .platform-grid, .trend-row { grid-template-columns: repeat(2, 1fr); }
+      .log-entry { grid-template-columns: 1fr; }
+      .hero .meta { flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Hero Header -->
+  <div class="hero">
+    <h1>Spikerz QA Final Assessment Report</h1>
+    <p class="subtitle">5-Day Monitoring Summary — Test Account Health & Issue Tracking</p>
+    <div class="meta">
+      <div class="meta-item"><strong>${mp.days_monitored}</strong> days monitored</div>
+      <div class="meta-item"><strong>${inv.total}</strong> accounts</div>
+      <div class="meta-item"><strong>${mp.total_health_checks}</strong> health checks</div>
+      <div class="meta-item"><strong>${mp.total_issues_found}</strong> issues found</div>
+      <div class="meta-item">Generated: <strong>${new Date(report.generated_at).toLocaleString()}</strong></div>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="cards">
+    <div class="card"><div class="label">Total Accounts</div><div class="value">${inv.total}</div></div>
+    <div class="card"><div class="label">Platforms</div><div class="value">${Object.keys(inv.by_platform || {}).length}</div></div>
+    <div class="card"><div class="label">Health Checks</div><div class="value">${mp.total_health_checks}</div></div>
+    <div class="card"><div class="label">Issues Found</div><div class="value red">${mp.total_issues_found}</div></div>
+    <div class="card"><div class="label">Maintenance Entries</div><div class="value amber">${mp.total_maintenance_entries}</div></div>
+    <div class="card"><div class="label">Days Clean</div><div class="value green">${dailySummaries.filter(d => d.errors === 0).length}</div></div>
+  </div>
+
+  <!-- Platform Breakdown -->
+  <div class="section">
+    <h2 class="section-title">Account Inventory by Platform</h2>
+    <div class="platform-grid">
+      ${Object.entries(inv.by_platform || {}).map(([platform, count]) => `
+      <div class="platform-card">
+        <div class="platform-name">${platform}</div>
+        <div class="platform-count">${count}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- Daily Trend -->
+  <div class="section">
+    <h2 class="section-title">Daily Health Trend</h2>
+    <table>
+      <thead>
+        <tr><th>Day</th><th>Date</th><th>Accounts</th><th>Connected</th><th>Errors</th><th>Warnings</th><th>Avg Response</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        ${dailySummaries.map((d, i) => `
+        <tr>
+          <td><strong>Day ${d.day}</strong></td>
+          <td>${dateLabels[i] || ''}</td>
+          <td>${d.total}</td>
+          <td>${this._badge(d.connected + '/' + d.total, d.connected === d.total ? 'green' : 'amber')}</td>
+          <td>${d.errors > 0 ? this._badge(d.errors, 'red') : this._badge('0', 'green')}</td>
+          <td>${d.warnings > 0 ? this._badge(d.warnings, 'amber') : this._badge('0', 'green')}</td>
+          <td>${d.avg_response_ms}ms</td>
+          <td>${d.errors === 0 && d.warnings === 0 ? this._badge('Clean', 'green') : d.errors > 0 ? this._badge('Issues', 'red') : this._badge('Warnings', 'amber')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Visual Trend Cards -->
+  <div class="section">
+    <h2 class="section-title">Connection Health Over 5 Days</h2>
+    <div class="trend-row">
+      ${dailySummaries.map((d, i) => `
+      <div class="trend-cell">
+        <div class="day-label">${dateLabels[i] || 'Day ' + d.day}</div>
+        <div class="day-val ${d.connected === d.total ? 'green' : 'red'}">${Math.round((d.connected / d.total) * 100)}%</div>
+        <div class="day-detail">${d.connected}/${d.total} connected</div>
+        <div class="day-detail">${d.errors} error${d.errors !== 1 ? 's' : ''} · ${d.warnings} warning${d.warnings !== 1 ? 's' : ''}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- Issues -->
+  <div class="section">
+    <h2 class="section-title">Issues Detected (${issues.length})</h2>
+    ${issues.length > 0 ? `
+    <table>
+      <thead><tr><th>ID</th><th>Day</th><th>Platform</th><th>Account</th><th>Severity</th><th>Title</th><th>Status</th></tr></thead>
+      <tbody>
+        ${issues.map((issue, idx) => {
+          const dayMatch = issue.title.match(/\[Day (\d+)\]/);
+          const day = dayMatch ? dayMatch[1] : '—';
+          return `
+        <tr>
+          <td><strong>BUG-${String(idx + 1).padStart(3, '0')}</strong></td>
+          <td>Day ${day}</td>
+          <td><strong>${(issue.platform || '').toUpperCase()}</strong></td>
+          <td>${issue.account_name}</td>
+          <td>${this._badge(issue.severity, issue.severity === 'high' ? 'red' : issue.severity === 'medium' ? 'amber' : 'gray')}</td>
+          <td style="max-width: 300px; white-space: normal;">${issue.description.split('\\n')[0]}</td>
+          <td>${this._badge(issue.status, 'gray')}</td>
+        </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+
+    <!-- Issue Details -->
+    ${issues.map((issue, idx) => `
+    <div class="rec-card ${issue.severity}">
+      <div class="rec-header">
+        <span class="rec-area">BUG-${String(idx + 1).padStart(3, '0')}: ${issue.account_name} (${(issue.platform || '').toUpperCase()})</span>
+        ${this._badge(issue.severity, issue.severity === 'high' ? 'red' : 'amber')}
+      </div>
+      <div class="rec-text">
+        <strong>Error:</strong> ${issue.description.replace(/\n/g, '<br>')}<br>
+        <strong>Steps:</strong> ${issue.reproduction_steps.replace(/\n/g, '<br>')}<br>
+        <strong>Action:</strong> ${issue.recommended_action}
+      </div>
+    </div>`).join('')}
+    ` : '<p style="color:#666; padding: 16px;">No issues detected during the monitoring period.</p>'}
+  </div>
+
+  <!-- Maintenance Log -->
+  <div class="section">
+    <h2 class="section-title">Maintenance Log (${maintenance.length} entries)</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Day</th><th>Category</th><th>Platform</th><th>Description</th><th>Outcome</th></tr>
+      </thead>
+      <tbody>
+        ${maintenance.map(entry => `
+        <tr>
+          <td>${entry.log_date}</td>
+          <td>${entry.day_number === 0 ? 'Setup' : 'Day ' + entry.day_number}</td>
+          <td>${this._badge(entry.category, entry.category === 'failure' ? 'red' : entry.category === 'observation' ? 'amber' : entry.category === 'restriction' ? 'amber' : 'green')}</td>
+          <td>${entry.platform ? entry.platform.toUpperCase() : '—'}</td>
+          <td style="max-width: 400px; white-space: normal;">${entry.description}</td>
+          <td>${this._badge(entry.outcome, entry.outcome === 'success' ? 'green' : entry.outcome === 'requires_attention' ? 'red' : 'amber')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="section">
+    <h2 class="section-title">Recommendations</h2>
+    ${recommendations.map(rec => `
+    <div class="rec-card ${rec.priority}">
+      <div class="rec-header">
+        <span class="rec-area">${rec.area}</span>
+        ${this._badge(rec.priority, rec.priority === 'high' ? 'red' : rec.priority === 'medium' ? 'amber' : 'green')}
+      </div>
+      <div class="rec-text">${rec.recommendation}</div>
+    </div>`).join('')}
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align: center; padding: 24px; color: #999; font-size: 0.75rem; border-top: 1px solid #eee; margin-top: 32px;">
+    Spikerz QA Assessment Report · Generated by spikerz-qa-tool · ${new Date(report.generated_at).toISOString()}
+  </div>
+
+</div>
+</body>
+</html>`;
+  }
+
+  /**
+   * Shared report CSS styles.
+   */
+  _getReportStyles() {
+    return `
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #333; padding: 24px; }
     .container { max-width: 1100px; margin: 0 auto; }
     h1 { font-size: 1.5rem; margin-bottom: 4px; }
     .subtitle { color: #666; margin-bottom: 24px; font-size: 0.9rem; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
     .card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .card .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
     .card .value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; }
-    .card .value.green { color: #16a34a; }
-    .card .value.red { color: #dc2626; }
-    .card .value.amber { color: #d97706; }
+    .card .value.green, .green { color: #16a34a; }
+    .card .value.red, .red { color: #dc2626; }
+    .card .value.amber, .amber { color: #d97706; }
     table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
     th { background: #f8f8f8; text-align: left; padding: 10px 12px; font-size: 0.75rem; text-transform: uppercase; color: #666; border-bottom: 2px solid #eee; }
     td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
@@ -293,87 +565,35 @@ class ReportService {
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-amber { background: #fef3c7; color: #92400e; }
     .badge-gray { background: #f3f4f6; color: #374151; }
-    .section-title { font-size: 1.1rem; margin: 24px 0 12px; }
-  </style>
-</head>
-<body>
-<div class="container">
-  <h1>${report.title}</h1>
-  <p class="subtitle">Generated: ${report.generated_at}</p>
+    .section-title { font-size: 1.1rem; margin: 24px 0 12px; }`;
+  }
 
-  <div class="cards">
-    <div class="card">
-      <div class="label">Total Accounts</div>
-      <div class="value">${summary.total_accounts || summary.total_health_checks || 0}</div>
-    </div>
-    <div class="card">
-      <div class="label">Connected</div>
-      <div class="value green">${summary.connected || 0}</div>
-    </div>
-    <div class="card">
-      <div class="label">Disconnected</div>
-      <div class="value red">${summary.disconnected || 0}</div>
-    </div>
-    <div class="card">
-      <div class="label">Errors</div>
-      <div class="value red">${summary.total_errors || summary.total_issues_found || 0}</div>
-    </div>
-    <div class="card">
-      <div class="label">Warnings</div>
-      <div class="value amber">${summary.total_warnings || 0}</div>
-    </div>
-    <div class="card">
-      <div class="label">Avg Response</div>
-      <div class="value">${summary.avg_response_time_ms || 0}ms</div>
-    </div>
-  </div>
+  /**
+   * Helper to generate a badge span.
+   */
+  _badge(text, color) {
+    return `<span class="badge badge-${color}">${text}</span>`;
+  }
 
-  <h2 class="section-title">Account Health Details</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Platform</th>
-        <th>Account</th>
-        <th>Status</th>
-        <th>Connection</th>
-        <th>Token</th>
-        <th>Permissions</th>
-        <th>Errors</th>
-        <th>Response</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${checks.map(c => `
-      <tr>
-        <td><strong>${(c.platform || '').toUpperCase()}</strong></td>
-        <td>${c.account_name || c.account_id}</td>
-        <td><span class="badge ${c.account_status === 'active' ? 'badge-green' : 'badge-red'}">${c.account_status}</span></td>
-        <td><span class="badge ${c.connection_status === 'connected' ? 'badge-green' : 'badge-red'}">${c.connection_status}</span></td>
-        <td><span class="badge ${c.token_validity === 'valid' ? 'badge-green' : c.token_validity === 'expiring_soon' ? 'badge-amber' : 'badge-red'}">${c.token_validity}</span></td>
-        <td><span class="badge ${c.permission_status === 'ok' ? 'badge-green' : c.permission_status === 'partial' ? 'badge-amber' : 'badge-red'}">${c.permission_status}</span></td>
-        <td>${(c.errors || []).length > 0 ? '<span class="badge badge-red">' + (c.errors || []).join('; ') + '</span>' : '<span class="badge badge-green">None</span>'}</td>
-        <td>${c.response_time_ms}ms</td>
-      </tr>`).join('')}
-    </tbody>
-  </table>
-
-  ${(report.issues || []).length > 0 ? `
+  /**
+   * Generate issues table HTML section.
+   */
+  _issuesTableHtml(issues) {
+    if (!issues || issues.length === 0) return '';
+    return `
   <h2 class="section-title">Issues Detected</h2>
   <table>
     <thead><tr><th>Severity</th><th>Title</th><th>Status</th><th>Created</th></tr></thead>
     <tbody>
-      ${(report.issues || []).map(i => `
+      ${issues.map(i => `
       <tr>
-        <td><span class="badge ${i.severity === 'critical' ? 'badge-red' : i.severity === 'high' ? 'badge-red' : 'badge-amber'}">${i.severity}</span></td>
+        <td>${this._badge(i.severity, i.severity === 'critical' || i.severity === 'high' ? 'red' : 'amber')}</td>
         <td>${i.title}</td>
-        <td><span class="badge badge-gray">${i.status}</span></td>
+        <td>${this._badge(i.status, 'gray')}</td>
         <td>${i.created_at}</td>
       </tr>`).join('')}
     </tbody>
-  </table>` : ''}
-</div>
-</body>
-</html>`;
+  </table>`;
   }
 }
 

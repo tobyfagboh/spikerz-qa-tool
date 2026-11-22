@@ -10,13 +10,13 @@
     .container { max-width: 1100px; margin: 0 auto; }
     h1 { font-size: 1.5rem; margin-bottom: 4px; }
     .subtitle { color: #666; margin-bottom: 24px; font-size: 0.9rem; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px; }
     .card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     .card .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
     .card .value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; }
-    .card .value.green { color: #16a34a; }
-    .card .value.red { color: #dc2626; }
-    .card .value.amber { color: #d97706; }
+    .card .value.green, .green { color: #16a34a; }
+    .card .value.red, .red { color: #dc2626; }
+    .card .value.amber, .amber { color: #d97706; }
     table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
     th { background: #f8f8f8; text-align: left; padding: 10px 12px; font-size: 0.75rem; text-transform: uppercase; color: #666; border-bottom: 2px solid #eee; }
     td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
@@ -27,60 +27,440 @@
     .badge-amber { background: #fef3c7; color: #92400e; }
     .badge-gray { background: #f3f4f6; color: #374151; }
     .section-title { font-size: 1.1rem; margin: 24px 0 12px; }
+    .hero { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: #fff; border-radius: 12px; padding: 32px; margin-bottom: 24px; }
+    .hero h1 { font-size: 1.6rem; color: #fff; margin-bottom: 8px; }
+    .hero .subtitle { color: #94a3b8; }
+    .hero .meta { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+    .hero .meta-item { font-size: 0.85rem; color: #cbd5e1; }
+    .hero .meta-item strong { color: #fff; }
+    .section { margin-bottom: 32px; }
+    .platform-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    .platform-card { background: #fff; border-radius: 8px; padding: 16px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .platform-card .platform-name { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 4px; }
+    .platform-card .platform-count { font-size: 1.8rem; font-weight: 700; color: #1e293b; }
+    .trend-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px; }
+    .trend-cell { background: #fff; border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .trend-cell .day-label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+    .trend-cell .day-val { font-size: 1.2rem; font-weight: 700; margin: 4px 0; }
+    .trend-cell .day-detail { font-size: 0.7rem; color: #666; }
+    .rec-card { background: #fff; border-left: 4px solid #3b82f6; border-radius: 0 8px 8px 0; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .rec-card.high { border-left-color: #dc2626; }
+    .rec-card.medium { border-left-color: #d97706; }
+    .rec-card.low { border-left-color: #16a34a; }
+    .rec-card .rec-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .rec-card .rec-area { font-weight: 600; font-size: 0.95rem; }
+    .rec-card .rec-text { font-size: 0.85rem; color: #555; line-height: 1.5; }
+    .log-entry { display: grid; grid-template-columns: 100px 90px 1fr auto; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #f0f0f0; align-items: center; font-size: 0.85rem; }
+    .log-entry:hover { background: #fafafa; }
+    .log-header { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: #666; background: #f8f8f8; border-bottom: 2px solid #eee; }
+    @media (max-width: 768px) {
+      .platform-grid, .trend-row { grid-template-columns: repeat(2, 1fr); }
+      .log-entry { grid-template-columns: 1fr; }
+      .hero .meta { flex-direction: column; gap: 8px; }
+    }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1>Spikerz QA Final Assessment Report — 5-Day Monitoring Summary</h1>
-  <p class="subtitle">Generated: 2026-11-22T09:37:34.141Z</p>
 
-  <div class="cards">
-    <div class="card">
-      <div class="label">Total Accounts</div>
-      <div class="value">75</div>
-    </div>
-    <div class="card">
-      <div class="label">Connected</div>
-      <div class="value green">0</div>
-    </div>
-    <div class="card">
-      <div class="label">Disconnected</div>
-      <div class="value red">0</div>
-    </div>
-    <div class="card">
-      <div class="label">Errors</div>
-      <div class="value red">3</div>
-    </div>
-    <div class="card">
-      <div class="label">Warnings</div>
-      <div class="value amber">0</div>
-    </div>
-    <div class="card">
-      <div class="label">Avg Response</div>
-      <div class="value">0ms</div>
+  <!-- Hero Header -->
+  <div class="hero">
+    <h1>Spikerz QA Final Assessment Report</h1>
+    <p class="subtitle">5-Day Monitoring Summary — Test Account Health & Issue Tracking</p>
+    <div class="meta">
+      <div class="meta-item"><strong>5</strong> days monitored</div>
+      <div class="meta-item"><strong>15</strong> accounts</div>
+      <div class="meta-item"><strong>75</strong> health checks</div>
+      <div class="meta-item"><strong>3</strong> issues found</div>
+      <div class="meta-item">Generated: <strong>11/22/2026, 10:50:15 AM</strong></div>
     </div>
   </div>
 
-  <h2 class="section-title">Account Health Details</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Platform</th>
-        <th>Account</th>
-        <th>Status</th>
-        <th>Connection</th>
-        <th>Token</th>
-        <th>Permissions</th>
-        <th>Errors</th>
-        <th>Response</th>
-      </tr>
-    </thead>
-    <tbody>
-      
-    </tbody>
-  </table>
+  <!-- Summary Cards -->
+  <div class="cards">
+    <div class="card"><div class="label">Total Accounts</div><div class="value">15</div></div>
+    <div class="card"><div class="label">Platforms</div><div class="value">5</div></div>
+    <div class="card"><div class="label">Health Checks</div><div class="value">75</div></div>
+    <div class="card"><div class="label">Issues Found</div><div class="value red">3</div></div>
+    <div class="card"><div class="label">Maintenance Entries</div><div class="value amber">14</div></div>
+    <div class="card"><div class="label">Days Clean</div><div class="value green">2</div></div>
+  </div>
 
-  
+  <!-- Platform Breakdown -->
+  <div class="section">
+    <h2 class="section-title">Account Inventory by Platform</h2>
+    <div class="platform-grid">
+      
+      <div class="platform-card">
+        <div class="platform-name">facebook</div>
+        <div class="platform-count">3</div>
+      </div>
+      <div class="platform-card">
+        <div class="platform-name">instagram</div>
+        <div class="platform-count">3</div>
+      </div>
+      <div class="platform-card">
+        <div class="platform-name">linkedin</div>
+        <div class="platform-count">3</div>
+      </div>
+      <div class="platform-card">
+        <div class="platform-name">tiktok</div>
+        <div class="platform-count">3</div>
+      </div>
+      <div class="platform-card">
+        <div class="platform-name">x</div>
+        <div class="platform-count">3</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Trend -->
+  <div class="section">
+    <h2 class="section-title">Daily Health Trend</h2>
+    <table>
+      <thead>
+        <tr><th>Day</th><th>Date</th><th>Accounts</th><th>Connected</th><th>Errors</th><th>Warnings</th><th>Avg Response</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><strong>Day 1</strong></td>
+          <td>Nov 18</td>
+          <td>15</td>
+          <td><span class="badge badge-green">15/15</span></td>
+          <td><span class="badge badge-green">0</span></td>
+          <td><span class="badge badge-green">0</span></td>
+          <td>154ms</td>
+          <td><span class="badge badge-green">Clean</span></td>
+        </tr>
+        <tr>
+          <td><strong>Day 2</strong></td>
+          <td>Nov 19</td>
+          <td>15</td>
+          <td><span class="badge badge-amber">14/15</span></td>
+          <td><span class="badge badge-red">1</span></td>
+          <td><span class="badge badge-amber">2</span></td>
+          <td>161ms</td>
+          <td><span class="badge badge-red">Issues</span></td>
+        </tr>
+        <tr>
+          <td><strong>Day 3</strong></td>
+          <td>Nov 20</td>
+          <td>15</td>
+          <td><span class="badge badge-amber">14/15</span></td>
+          <td><span class="badge badge-red">2</span></td>
+          <td><span class="badge badge-green">0</span></td>
+          <td>157ms</td>
+          <td><span class="badge badge-red">Issues</span></td>
+        </tr>
+        <tr>
+          <td><strong>Day 4</strong></td>
+          <td>Nov 21</td>
+          <td>15</td>
+          <td><span class="badge badge-amber">14/15</span></td>
+          <td><span class="badge badge-red">2</span></td>
+          <td><span class="badge badge-amber">1</span></td>
+          <td>117ms</td>
+          <td><span class="badge badge-red">Issues</span></td>
+        </tr>
+        <tr>
+          <td><strong>Day 5</strong></td>
+          <td>Nov 22</td>
+          <td>15</td>
+          <td><span class="badge badge-green">15/15</span></td>
+          <td><span class="badge badge-green">0</span></td>
+          <td><span class="badge badge-amber">3</span></td>
+          <td>133ms</td>
+          <td><span class="badge badge-amber">Warnings</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Visual Trend Cards -->
+  <div class="section">
+    <h2 class="section-title">Connection Health Over 5 Days</h2>
+    <div class="trend-row">
+      
+      <div class="trend-cell">
+        <div class="day-label">Nov 18</div>
+        <div class="day-val green">100%</div>
+        <div class="day-detail">15/15 connected</div>
+        <div class="day-detail">0 errors · 0 warnings</div>
+      </div>
+      <div class="trend-cell">
+        <div class="day-label">Nov 19</div>
+        <div class="day-val red">93%</div>
+        <div class="day-detail">14/15 connected</div>
+        <div class="day-detail">1 error · 2 warnings</div>
+      </div>
+      <div class="trend-cell">
+        <div class="day-label">Nov 20</div>
+        <div class="day-val red">93%</div>
+        <div class="day-detail">14/15 connected</div>
+        <div class="day-detail">2 errors · 0 warnings</div>
+      </div>
+      <div class="trend-cell">
+        <div class="day-label">Nov 21</div>
+        <div class="day-val red">93%</div>
+        <div class="day-detail">14/15 connected</div>
+        <div class="day-detail">2 errors · 1 warning</div>
+      </div>
+      <div class="trend-cell">
+        <div class="day-label">Nov 22</div>
+        <div class="day-val green">100%</div>
+        <div class="day-detail">15/15 connected</div>
+        <div class="day-detail">0 errors · 3 warnings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issues -->
+  <div class="section">
+    <h2 class="section-title">Issues Detected (3)</h2>
+    
+    <table>
+      <thead><tr><th>ID</th><th>Day</th><th>Platform</th><th>Account</th><th>Severity</th><th>Title</th><th>Status</th></tr></thead>
+      <tbody>
+        
+        <tr>
+          <td><strong>BUG-001</strong></td>
+          <td>Day 2</td>
+          <td><strong>TIKTOK</strong></td>
+          <td>TT-02 QA Creator Account</td>
+          <td><span class="badge badge-amber">medium</span></td>
+          <td style="max-width: 300px; white-space: normal;">Health check on Day 2 detected the following error(s) for TT-02 QA Creator Account (tiktok):
+
+Sandbox account quota exceeded - daily API limit reached</td>
+          <td><span class="badge badge-gray">open</span></td>
+        </tr>
+        <tr>
+          <td><strong>BUG-002</strong></td>
+          <td>Day 3</td>
+          <td><strong>FACEBOOK</strong></td>
+          <td>FB-02 QA Business Page</td>
+          <td><span class="badge badge-red">high</span></td>
+          <td style="max-width: 300px; white-space: normal;">Health check on Day 3 detected the following error(s) for FB-02 QA Business Page (facebook):
+
+Session expired - Graph API returned error 190; Permissions revoked: Session expired</td>
+          <td><span class="badge badge-gray">open</span></td>
+        </tr>
+        <tr>
+          <td><strong>BUG-003</strong></td>
+          <td>Day 4</td>
+          <td><strong>LINKEDIN</strong></td>
+          <td>LI-03 QA Secondary Profile</td>
+          <td><span class="badge badge-red">high</span></td>
+          <td style="max-width: 300px; white-space: normal;">Health check on Day 4 detected the following error(s) for LI-03 QA Secondary Profile (linkedin):
+
+Token expired - requires re-authentication; Permissions revoked: Token expired</td>
+          <td><span class="badge badge-gray">open</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Issue Details -->
+    
+    <div class="rec-card medium">
+      <div class="rec-header">
+        <span class="rec-area">BUG-001: TT-02 QA Creator Account (TIKTOK)</span>
+        <span class="badge badge-amber">medium</span>
+      </div>
+      <div class="rec-text">
+        <strong>Error:</strong> Health check on Day 2 detected the following error(s) for TT-02 QA Creator Account (tiktok):<br><br>Sandbox account quota exceeded - daily API limit reached<br>
+        <strong>Steps:</strong> 1. Navigate to Spikerz QA Dashboard<br>2. View account TT-02 QA Creator Account<br>3. Run health check<br>4. Observe error: Sandbox account quota exceeded - daily API limit reached<br>
+        <strong>Action:</strong> Wait for quota reset (usually 24 hours). Consider spacing out API requests or reducing check frequency for this platform.
+      </div>
+    </div>
+    <div class="rec-card high">
+      <div class="rec-header">
+        <span class="rec-area">BUG-002: FB-02 QA Business Page (FACEBOOK)</span>
+        <span class="badge badge-red">high</span>
+      </div>
+      <div class="rec-text">
+        <strong>Error:</strong> Health check on Day 3 detected the following error(s) for FB-02 QA Business Page (facebook):<br><br>Session expired - Graph API returned error 190; Permissions revoked: Session expired<br>
+        <strong>Steps:</strong> 1. Navigate to Spikerz QA Dashboard<br>2. View account FB-02 QA Business Page<br>3. Run health check<br>4. Observe error: Session expired - Graph API returned error 190; Permissions revoked: Session expired<br>
+        <strong>Action:</strong> Re-authenticate the account through the Spikerz UI. Navigate to Settings > Connected Accounts, remove the expired connection, and re-authorize with fresh credentials.
+      </div>
+    </div>
+    <div class="rec-card high">
+      <div class="rec-header">
+        <span class="rec-area">BUG-003: LI-03 QA Secondary Profile (LINKEDIN)</span>
+        <span class="badge badge-red">high</span>
+      </div>
+      <div class="rec-text">
+        <strong>Error:</strong> Health check on Day 4 detected the following error(s) for LI-03 QA Secondary Profile (linkedin):<br><br>Token expired - requires re-authentication; Permissions revoked: Token expired<br>
+        <strong>Steps:</strong> 1. Navigate to Spikerz QA Dashboard<br>2. View account LI-03 QA Secondary Profile<br>3. Run health check<br>4. Observe error: Token expired - requires re-authentication; Permissions revoked: Token expired<br>
+        <strong>Action:</strong> Re-authenticate the account through the Spikerz UI. Navigate to Settings > Connected Accounts, remove the expired connection, and re-authorize with fresh credentials.
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Maintenance Log -->
+  <div class="section">
+    <h2 class="section-title">Maintenance Log (14 entries)</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Day</th><th>Category</th><th>Platform</th><th>Description</th><th>Outcome</th></tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>2026-11-22</td>
+          <td>Setup</td>
+          <td><span class="badge badge-green">setup</span></td>
+          <td>—</td>
+          <td style="max-width: 400px; white-space: normal;">Initial seed: 15 test accounts imported across 5 platforms (LinkedIn, Facebook, Instagram, TikTok, X).</td>
+          <td><span class="badge badge-green">success</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-18</td>
+          <td>Day 1</td>
+          <td><span class="badge badge-green">connection</span></td>
+          <td>—</td>
+          <td style="max-width: 400px; white-space: normal;">15 of 15 accounts passed health check with no issues.</td>
+          <td><span class="badge badge-green">success</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-19</td>
+          <td>Day 2</td>
+          <td><span class="badge badge-green">connection</span></td>
+          <td>—</td>
+          <td style="max-width: 400px; white-space: normal;">14 of 15 accounts passed health check with no issues.</td>
+          <td><span class="badge badge-green">success</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-19</td>
+          <td>Day 2</td>
+          <td><span class="badge badge-red">failure</span></td>
+          <td>TIKTOK</td>
+          <td style="max-width: 400px; white-space: normal;">Health check failed: Sandbox account quota exceeded - daily API limit reached</td>
+          <td><span class="badge badge-red">requires_attention</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-19</td>
+          <td>Day 2</td>
+          <td><span class="badge badge-amber">observation</span></td>
+          <td>INSTAGRAM</td>
+          <td style="max-width: 400px; white-space: normal;">Warning detected: API rate limit hit - 429 response (retry after 300s)</td>
+          <td><span class="badge badge-amber">monitoring</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-20</td>
+          <td>Day 3</td>
+          <td><span class="badge badge-green">connection</span></td>
+          <td>—</td>
+          <td style="max-width: 400px; white-space: normal;">14 of 15 accounts passed health check with no issues.</td>
+          <td><span class="badge badge-green">success</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-20</td>
+          <td>Day 3</td>
+          <td><span class="badge badge-red">failure</span></td>
+          <td>FACEBOOK</td>
+          <td style="max-width: 400px; white-space: normal;">Health check failed: Session expired - Graph API returned error 190; Permissions revoked: Session expired</td>
+          <td><span class="badge badge-red">requires_attention</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-21</td>
+          <td>Day 4</td>
+          <td><span class="badge badge-green">connection</span></td>
+          <td>—</td>
+          <td style="max-width: 400px; white-space: normal;">14 of 15 accounts passed health check with no issues.</td>
+          <td><span class="badge badge-green">success</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-21</td>
+          <td>Day 4</td>
+          <td><span class="badge badge-red">failure</span></td>
+          <td>LINKEDIN</td>
+          <td style="max-width: 400px; white-space: normal;">Health check failed: Token expired - requires re-authentication; Permissions revoked: Token expired</td>
+          <td><span class="badge badge-red">requires_attention</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-21</td>
+          <td>Day 4</td>
+          <td><span class="badge badge-amber">observation</span></td>
+          <td>X</td>
+          <td style="max-width: 400px; white-space: normal;">Warning detected: App-level rate limit at 90% - consider spacing requests</td>
+          <td><span class="badge badge-amber">monitoring</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-22</td>
+          <td>Day 5</td>
+          <td><span class="badge badge-green">connection</span></td>
+          <td>—</td>
+          <td style="max-width: 400px; white-space: normal;">15 of 15 accounts passed health check with no issues.</td>
+          <td><span class="badge badge-green">success</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-22</td>
+          <td>Day 5</td>
+          <td><span class="badge badge-green">token_refresh</span></td>
+          <td>FACEBOOK</td>
+          <td style="max-width: 400px; white-space: normal;">Warning detected: Page access token nearing expiry (2 days remaining)</td>
+          <td><span class="badge badge-amber">monitoring</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-22</td>
+          <td>Day 5</td>
+          <td><span class="badge badge-green">token_refresh</span></td>
+          <td>FACEBOOK</td>
+          <td style="max-width: 400px; white-space: normal;">Warning detected: Page access token nearing expiry (2 days remaining)</td>
+          <td><span class="badge badge-amber">monitoring</span></td>
+        </tr>
+        <tr>
+          <td>2026-11-22</td>
+          <td>Day 5</td>
+          <td><span class="badge badge-amber">restriction</span></td>
+          <td>TIKTOK</td>
+          <td style="max-width: 400px; white-space: normal;">Warning detected: Account flagged for review - automated activity detected</td>
+          <td><span class="badge badge-amber">monitoring</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="section">
+    <h2 class="section-title">Recommendations</h2>
+    
+    <div class="rec-card high">
+      <div class="rec-header">
+        <span class="rec-area">Token Management</span>
+        <span class="badge badge-red">high</span>
+      </div>
+      <div class="rec-text">Implement proactive token refresh logic. Several accounts experienced token expiry during monitoring. Consider adding a background job that refreshes tokens 24 hours before expiry.</div>
+    </div>
+    <div class="rec-card medium">
+      <div class="rec-header">
+        <span class="rec-area">Rate Limiting</span>
+        <span class="badge badge-amber">medium</span>
+      </div>
+      <div class="rec-text">Implement request throttling and queuing. Multiple platforms showed rate limit warnings. Stagger health checks across the day rather than running all simultaneously.</div>
+    </div>
+    <div class="rec-card medium">
+      <div class="rec-header">
+        <span class="rec-area">Alerting</span>
+        <span class="badge badge-amber">medium</span>
+      </div>
+      <div class="rec-text">Set up real-time alerts (Slack/email) for critical failures. Currently issues are logged but not pushed to the team.</div>
+    </div>
+    <div class="rec-card low">
+      <div class="rec-header">
+        <span class="rec-area">Scaling</span>
+        <span class="badge badge-green">low</span>
+      </div>
+      <div class="rec-text">For 100+ accounts, migrate from SQLite to PostgreSQL, add connection pooling, and implement parallel health checks with configurable concurrency limits.</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align: center; padding: 24px; color: #999; font-size: 0.75rem; border-top: 1px solid #eee; margin-top: 32px;">
+    Spikerz QA Assessment Report · Generated by spikerz-qa-tool · 2026-11-22T09:50:15.089Z
+  </div>
+
 </div>
 </body>
 </html>
