@@ -71,14 +71,17 @@ async function main() {
         const days = parseInt(simulateDays);
         console.log(`\nSimulating ${days}-day health check monitoring period...\n`);
 
-        const baseDate = new Date();
-        baseDate.setDate(baseDate.getDate() - days); // start from N days ago
+        // Calculate start date so Day N = (today - days + N)
+        // This produces calendar-spread timestamps, e.g., for 5 days ending today:
+        // Day 1 = 4 days ago, Day 2 = 3 days ago, ..., Day 5 = today
+        const today = new Date();
+        today.setUTCHours(8, 0, 0, 0); // Health checks run at 08:00 UTC daily
 
         for (let day = 1; day <= days; day++) {
-          const checkDate = new Date(baseDate);
-          checkDate.setDate(checkDate.getDate() + day);
+          const checkDate = new Date(today);
+          checkDate.setUTCDate(checkDate.getUTCDate() - days + day);
           const timestamp = checkDate.toISOString();
-          const dateStr = checkDate.toISOString().split('T')[0];
+          const dateStr = timestamp.split('T')[0];
 
           console.log(`--- Day ${day} (${dateStr}) ---`);
           const results = healthCheckService.runAll(day, timestamp);
@@ -131,6 +134,41 @@ async function main() {
       break;
     }
 
+    case 'import': {
+      const filePath = getArg('--file');
+      if (!filePath) {
+        console.error('Usage: import --file <path.json|path.csv>');
+        process.exit(1);
+      }
+      const absPath = path.resolve(filePath);
+      if (!fs.existsSync(absPath)) {
+        console.error(`File not found: ${absPath}`);
+        process.exit(1);
+      }
+
+      const ext = path.extname(absPath).toLowerCase();
+      let result;
+
+      if (ext === '.csv') {
+        console.log(`Importing accounts from CSV: ${absPath}`);
+        result = accountService.importFromCsv(absPath);
+      } else if (ext === '.json') {
+        console.log(`Importing accounts from JSON: ${absPath}`);
+        const data = JSON.parse(fs.readFileSync(absPath, 'utf-8'));
+        const accounts = Array.isArray(data) ? data : data.accounts;
+        result = accountService.bulkImport(accounts);
+      } else {
+        console.error('Unsupported file format. Use .json or .csv');
+        process.exit(1);
+      }
+
+      console.log(`Imported ${result.created} accounts.`);
+      if (result.errors.length > 0) {
+        console.log('Errors:', result.errors);
+      }
+      break;
+    }
+
     case 'accounts': {
       const accounts = accountService.getAll();
       console.log(`\nTotal accounts: ${accounts.length}\n`);
@@ -161,6 +199,7 @@ Spikerz QA Tool — CLI
 
 Usage:
   node src/cli.js seed                            Import 15 test accounts
+  node src/cli.js import --file <path.json|.csv>  Import accounts from CSV or JSON
   node src/cli.js health-check --day <1-5>        Run health check for a specific day
   node src/cli.js health-check --simulate-days 5  Simulate all 5 days
   node src/cli.js report --day <1-5>              Generate daily report

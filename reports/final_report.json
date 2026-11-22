@@ -1,6 +1,6 @@
 {
   "title": "Spikerz QA Final Assessment Report — 5-Day Monitoring Summary",
-  "generated_at": "2026-11-21T09:08:09.738Z",
+  "generated_at": "2026-11-22T09:37:34.141Z",
   "monitoring_period": {
     "days_monitored": 5,
     "total_health_checks": 75,
@@ -31,7 +31,7 @@
       "connected": 15,
       "errors": 0,
       "warnings": 0,
-      "avg_response_ms": 141
+      "avg_response_ms": 145
     },
     {
       "day": 2,
@@ -39,7 +39,7 @@
       "connected": 14,
       "errors": 1,
       "warnings": 2,
-      "avg_response_ms": 161
+      "avg_response_ms": 148
     },
     {
       "day": 3,
@@ -47,7 +47,7 @@
       "connected": 14,
       "errors": 2,
       "warnings": 0,
-      "avg_response_ms": 147
+      "avg_response_ms": 136
     },
     {
       "day": 4,
@@ -55,7 +55,7 @@
       "connected": 14,
       "errors": 2,
       "warnings": 1,
-      "avg_response_ms": 146
+      "avg_response_ms": 138
     },
     {
       "day": 5,
@@ -63,7 +63,7 @@
       "connected": 15,
       "errors": 0,
       "warnings": 3,
-      "avg_response_ms": 133
+      "avg_response_ms": 137
     }
   ],
   "issues_summary": {
@@ -87,7 +87,7 @@
         "evidence": null,
         "root_cause": null,
         "recommended_action": "Wait for quota reset (usually 24 hours). Consider spacing out API requests or reducing check frequency for this platform.",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "resolved_at": null,
         "account_name": "TT-02 QA Creator Account",
         "platform": "tiktok"
@@ -103,7 +103,7 @@
         "evidence": null,
         "root_cause": null,
         "recommended_action": "Re-authenticate the account through the Spikerz UI. Navigate to Settings > Connected Accounts, remove the expired connection, and re-authorize with fresh credentials.",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "resolved_at": null,
         "account_name": "FB-02 QA Business Page",
         "platform": "facebook"
@@ -119,7 +119,7 @@
         "evidence": null,
         "root_cause": null,
         "recommended_action": "Re-authenticate the account through the Spikerz UI. Navigate to Settings > Connected Accounts, remove the expired connection, and re-authorize with fresh credentials.",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "resolved_at": null,
         "account_name": "LI-03 QA Secondary Profile",
         "platform": "linkedin"
@@ -140,182 +140,182 @@
       {
         "id": 1,
         "day_number": 0,
-        "log_date": "2026-11-21",
+        "log_date": "2026-11-22",
         "category": "setup",
         "account_id": null,
         "description": "Initial seed: 15 test accounts imported across 5 platforms (LinkedIn, Facebook, Instagram, TikTok, X).",
         "action_taken": "Bulk import from seed_accounts.json",
         "outcome": "success",
-        "created_at": "2026-11-21 09:08:06",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": null,
         "platform": null
       },
       {
         "id": 2,
         "day_number": 1,
-        "log_date": "2026-11-17",
+        "log_date": "2026-11-18",
         "category": "connection",
         "account_id": null,
         "description": "15 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": null,
         "platform": null
       },
       {
         "id": 3,
         "day_number": 2,
-        "log_date": "2026-11-18",
+        "log_date": "2026-11-19",
         "category": "connection",
         "account_id": null,
         "description": "14 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": null,
         "platform": null
       },
       {
         "id": 4,
         "day_number": 2,
-        "log_date": "2026-11-18",
+        "log_date": "2026-11-19",
         "category": "failure",
         "account_id": "TT-002",
         "description": "Health check failed: Sandbox account quota exceeded - daily API limit reached",
         "action_taken": "Issue auto-created for investigation",
         "outcome": "requires_attention",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "TT-02 QA Creator Account",
         "platform": "tiktok"
       },
       {
         "id": 5,
         "day_number": 2,
-        "log_date": "2026-11-18",
+        "log_date": "2026-11-19",
         "category": "observation",
         "account_id": "IG-001",
         "description": "Warning detected: API rate limit hit - 429 response (retry after 300s)",
         "action_taken": "Monitoring - no immediate action required",
         "outcome": "monitoring",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "IG-01 QA Business Account",
         "platform": "instagram"
       },
       {
         "id": 6,
         "day_number": 3,
-        "log_date": "2026-11-19",
+        "log_date": "2026-11-20",
         "category": "connection",
         "account_id": null,
         "description": "14 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": null,
         "platform": null
       },
       {
         "id": 7,
         "day_number": 3,
-        "log_date": "2026-11-19",
+        "log_date": "2026-11-20",
         "category": "failure",
         "account_id": "FB-002",
         "description": "Health check failed: Session expired - Graph API returned error 190; Permissions revoked: Session expired",
         "action_taken": "Issue auto-created for investigation",
         "outcome": "requires_attention",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "FB-02 QA Business Page",
         "platform": "facebook"
       },
       {
         "id": 8,
         "day_number": 4,
-        "log_date": "2026-11-20",
+        "log_date": "2026-11-21",
         "category": "connection",
         "account_id": null,
         "description": "14 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": null,
         "platform": null
       },
       {
         "id": 9,
         "day_number": 4,
-        "log_date": "2026-11-20",
+        "log_date": "2026-11-21",
         "category": "failure",
         "account_id": "LI-003",
         "description": "Health check failed: Token expired - requires re-authentication; Permissions revoked: Token expired",
         "action_taken": "Issue auto-created for investigation",
         "outcome": "requires_attention",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "LI-03 QA Secondary Profile",
         "platform": "linkedin"
       },
       {
         "id": 10,
         "day_number": 4,
-        "log_date": "2026-11-20",
+        "log_date": "2026-11-21",
         "category": "observation",
         "account_id": "X-001",
         "description": "Warning detected: App-level rate limit at 90% - consider spacing requests",
         "action_taken": "Monitoring - no immediate action required",
         "outcome": "monitoring",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "X-01 QA Business Account",
         "platform": "x"
       },
       {
         "id": 11,
         "day_number": 5,
-        "log_date": "2026-11-21",
+        "log_date": "2026-11-22",
         "category": "connection",
         "account_id": null,
         "description": "15 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": null,
         "platform": null
       },
       {
         "id": 12,
         "day_number": 5,
-        "log_date": "2026-11-21",
+        "log_date": "2026-11-22",
         "category": "token_refresh",
         "account_id": "FB-002",
         "description": "Warning detected: Page access token nearing expiry (2 days remaining)",
         "action_taken": "Monitoring - no immediate action required",
         "outcome": "monitoring",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "FB-02 QA Business Page",
         "platform": "facebook"
       },
       {
         "id": 13,
         "day_number": 5,
-        "log_date": "2026-11-21",
+        "log_date": "2026-11-22",
         "category": "token_refresh",
         "account_id": "FB-003",
         "description": "Warning detected: Page access token nearing expiry (2 days remaining)",
         "action_taken": "Monitoring - no immediate action required",
         "outcome": "monitoring",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "FB-03 QA Community Page",
         "platform": "facebook"
       },
       {
         "id": 14,
         "day_number": 5,
-        "log_date": "2026-11-21",
+        "log_date": "2026-11-22",
         "category": "restriction",
         "account_id": "TT-003",
         "description": "Warning detected: Account flagged for review - automated activity detected",
         "action_taken": "Monitoring - no immediate action required",
         "outcome": "monitoring",
-        "created_at": "2026-11-21 09:08:09",
+        "created_at": "2026-11-22 09:37:34",
         "account_name": "TT-03 QA Personal Account",
         "platform": "tiktok"
       }

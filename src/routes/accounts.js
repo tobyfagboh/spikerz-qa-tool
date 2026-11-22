@@ -89,15 +89,26 @@ router.delete('/:id', (req, res) => {
 // POST /api/accounts/import - Bulk import from JSON
 router.post('/import', (req, res) => {
   try {
-    const { accounts } = req.body;
+    const { accounts, format } = req.body;
+
+    // CSV import: expects { format: "csv", csv: "<csv string>" }
+    if (format === 'csv' && req.body.csv) {
+      const tmpPath = path.join(__dirname, '..', '..', 'data', '_import_tmp.csv');
+      fs.writeFileSync(tmpPath, req.body.csv);
+      const results = accountService.importFromCsv(tmpPath);
+      fs.unlinkSync(tmpPath);
+      return res.json({ success: true, format: 'csv', ...results });
+    }
+
+    // JSON import (default)
     if (!Array.isArray(accounts)) {
       return res.status(400).json({
         success: false,
-        error: 'Request body must contain an "accounts" array'
+        error: 'Request body must contain an "accounts" array, or { format: "csv", csv: "..." }'
       });
     }
     const results = accountService.bulkImport(accounts);
-    res.json({ success: true, ...results });
+    res.json({ success: true, format: 'json', ...results });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

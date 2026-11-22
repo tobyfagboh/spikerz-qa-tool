@@ -64,6 +64,10 @@ npm start
 # Seed 15 test accounts
 node src/cli.js seed
 
+# Import accounts from CSV or JSON
+node src/cli.js import --file data/sample_import.csv
+node src/cli.js import --file data/seed_accounts.json
+
 # Run health check for a specific day
 node src/cli.js health-check --day 1
 
@@ -135,10 +139,20 @@ Automatically created when health checks detect errors. Includes severity (criti
 ## Security Approach
 
 1. **No credentials stored in code or database** — All credentials are referenced by vault ID (e.g., `VAULT_LI_001`), not stored directly
-2. **Environment variables** — Configuration via `.env` file, excluded from git
-3. **`.gitignore`** — Excludes `.env`, database files, `node_modules`
-4. **Credential vault abstraction** — The `credential_ref_id` field points to an external secrets manager. In production, this would integrate with AWS Secrets Manager, HashiCorp Vault, or similar
-5. **No actual API keys used** — This assessment runs in mock mode; real platform API keys would be stored in the secrets manager, never in the codebase
+2. **Credential vault utility** (`src/utils/credentialVault.js`) — Abstracted credential retrieval with three strategies: environment variables → mock mode → external vault (AWS Secrets Manager / HashiCorp Vault placeholder). Every access is audit-logged with timestamp, source, and success/failure
+3. **Vault audit endpoint** — `GET /api/health-checks/vault-audit` returns the full credential access log for security review
+4. **Environment variables** — Configuration via `.env` file, excluded from git
+5. **`.gitignore`** — Excludes `.env`, database files, `node_modules`
+6. **No actual API keys used** — This assessment runs in mock mode; real platform API keys would be stored in the secrets manager, never in the codebase
+
+## CI/CD
+
+GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and PR to `main`:
+
+1. **Tests** — Runs full test suite on Node.js 18.x and 20.x
+2. **Coverage** — Generates test coverage report
+3. **Simulation** — Seeds the database and runs the full 5-day health check simulation
+4. **Artifacts** — Uploads generated reports as build artifacts (retained 30 days)
 
 ## Assumptions and Limitations
 
@@ -170,11 +184,12 @@ All 15 accounts are **mock test accounts**. This was chosen because:
 | POST | /api/accounts | Create account |
 | PUT | /api/accounts/:id | Update account |
 | DELETE | /api/accounts/:id | Delete account |
-| POST | /api/accounts/import | Bulk import from JSON |
+| POST | /api/accounts/import | Bulk import from JSON or CSV |
 | POST | /api/health-checks/run | Run health checks |
 | GET | /api/health-checks/day/:n | Get day's results |
 | GET | /api/health-checks/account/:id | Account history |
 | GET | /api/health-checks/issues | List all issues |
 | GET | /api/health-checks/maintenance-log | Full maintenance log |
+| GET | /api/health-checks/vault-audit | Credential vault access log |
 | GET | /api/reports/daily/:day | Generate daily report |
 | GET | /api/reports/final | Generate final report |

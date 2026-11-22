@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { getDb } = require('../db/database');
+const fs = require('fs');
 
 class AccountService {
   /**
@@ -139,6 +140,70 @@ class AccountService {
 
     insertMany(accounts);
     return results;
+  }
+
+  /**
+   * Import accounts from a CSV file.
+   * Expected columns: id,platform,account_type,account_name,account_handle,
+   *   environment,owner,status,connection_status,connected_assets,permissions,
+   *   credential_ref_id,notes
+   *
+   * @param {string} csvPath - Path to the CSV file.
+   * @returns {{ created: number, errors: Array }}
+   */
+  importFromCsv(csvPath) {
+    const content = fs.readFileSync(csvPath, 'utf-8');
+    const lines = content.split('\n').filter(l => l.trim());
+
+    if (lines.length < 2) {
+      return { created: 0, errors: [{ row: 0, error: 'CSV file is empty or has no data rows' }] };
+    }
+
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const accounts = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const values = this._parseCsvLine(lines[i]);
+      const row = {};
+      headers.forEach((h, idx) => {
+        row[h] = values[idx] ? values[idx].trim() : '';
+      });
+
+      // Parse JSON fields from CSV strings
+      if (row.connected_assets) {
+        try { row.connected_assets = JSON.parse(row.connected_assets); } catch { row.connected_assets = row.connected_assets.split(';').filter(Boolean); }
+      }
+      if (row.permissions) {
+        try { row.permissions = JSON.parse(row.permissions); } catch { row.permissions = row.permissions.split(';').filter(Boolean); }
+      }
+
+      accounts.push(row);
+    }
+
+    return this.bulkImport(accounts);
+  }
+
+  /**
+   * Parse a CSV line, respecting quoted fields that may contain commas.
+   */
+  _parseCsvLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        inQuotes = !inQuotes;
+      } else if (ch === ',' && !inQuotes) {
+        result.push(current);
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    result.push(current);
+    return result;
   }
 
   /**

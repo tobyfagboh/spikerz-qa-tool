@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const healthCheckService = require('../services/healthCheckService');
 const maintenanceLogService = require('../services/maintenanceLogService');
+const { getAccessLog } = require('../utils/credentialVault');
 
 // POST /api/health-checks/run - Run health checks for all accounts
 router.post('/run', (req, res) => {
@@ -65,6 +66,20 @@ router.get('/maintenance-log', (req, res) => {
       ? maintenanceLogService.getByDay(parseInt(req.query.day))
       : maintenanceLogService.getAll();
     res.json({ success: true, count: log.length, data: log });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET /api/health-checks/vault-audit - Credential vault access log
+router.get('/vault-audit', (req, res) => {
+  try {
+    const log = getAccessLog();
+    res.json({
+      success: true,
+      count: log.length,
+      data: log
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

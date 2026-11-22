@@ -1,5 +1,6 @@
 const { getDb } = require('../db/database');
 const accountService = require('./accountService');
+const { validateCredential } = require('../utils/credentialVault');
 
 /**
  * Platform-specific mock health check simulators.
@@ -134,6 +135,16 @@ class HealthCheckService {
     const errors = [];
     const warnings = [];
     const startTime = Date.now();
+
+    // Validate credential from vault before platform checks
+    if (account.credential_ref_id) {
+      const credStatus = validateCredential(account.credential_ref_id);
+      if (!credStatus.valid) {
+        warnings.push(`Credential vault: token for ${account.credential_ref_id} is invalid or missing`);
+      } else if (credStatus.expiringsSoon) {
+        warnings.push(`Credential vault: token for ${account.credential_ref_id} expires in ${Math.floor(credStatus.expiresIn / 86400)} days`);
+      }
+    }
 
     // Check connection
     const connResult = checker.checkConnection(account, dayNumber);

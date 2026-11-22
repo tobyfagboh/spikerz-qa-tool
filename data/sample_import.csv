@@ -1,0 +1,4 @@
+id,platform,account_type,account_name,account_handle,environment,owner,status,connection_status,connected_assets,permissions,credential_ref_id,notes
+CSV-LI-01,linkedin,personal,CSV LinkedIn Test,@csv-li-test,test,qa-team,active,connected,"[""feed"",""analytics""]","[""r_liteprofile"",""w_member_social""]",VAULT_CSV_LI_01,Imported from CSV
+CSV-FB-01,facebook,page,CSV Facebook Page,@csv-fb-page,test,qa-team,active,connected,"[""page_feed"",""insights""]","[""pages_show_list"",""pages_manage_posts""]",VAULT_CSV_FB_01,Imported from CSV
+CSV-IG-01,instagram,business,CSV Instagram Business,@csv-ig-biz,test,qa-team,active,connected,"[""media"",""stories""]","[""instagram_basic"",""instagram_content_publish""]",VAULT_CSV_IG_01,Imported from CSV
