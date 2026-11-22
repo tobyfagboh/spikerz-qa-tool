@@ -15,7 +15,8 @@ const PLATFORM_CHECKS = {
       if (dayNumber === 4 && account.account_name.includes('LI-03')) {
         return { connected: false, reason: 'Token expired - requires re-authentication' };
       }
-      if (dayNumber === 3 && Math.random() < 0.15) {
+      // Deterministic (was Math.random) so repeated simulations produce identical reports
+      if (dayNumber === 3 && account.account_name.includes('LI-02')) {
         return { connected: true, warning: 'Rate limit approaching (80% of daily quota)' };
       }
       return { connected: true };

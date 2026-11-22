@@ -46,14 +46,17 @@ async function main() {
         process.exit(1);
       }
       const seedData = JSON.parse(fs.readFileSync(seedPath, 'utf-8'));
-      const result = accountService.bulkImport(seedData.accounts);
+      const result = accountService.bulkImport(seedData.accounts, { skipExisting: true });
       console.log(`Seeded ${result.created} accounts.`);
+      if (result.skipped > 0) {
+        console.log(`Skipped ${result.skipped} accounts that already exist.`);
+      }
       if (result.errors.length > 0) {
         console.log('Errors:', result.errors);
       }
 
-      // Add setup log entry
-      maintenanceLogService.add({
+      // Log the seed only when it actually added accounts
+      if (result.created > 0) maintenanceLogService.add({
         day_number: 0,
         log_date: new Date().toISOString().split('T')[0],
         category: 'setup',
@@ -71,6 +74,26 @@ async function main() {
         const days = parseInt(simulateDays);
         console.log(`\nSimulating ${days}-day health check monitoring period...\n`);
 
+        // Clear previous simulation data for days 1..N so re-runs replace rather than append.
+        // Accounts and day-0 setup log entries are kept.
+        const db = getDb();
+        db.transaction(() => {
+          db.prepare('DELETE FROM health_checks WHERE day_number BETWEEN 1 AND ?').run(days);
+          db.prepare('DELETE FROM maintenance_log WHERE day_number BETWEEN 1 AND ?').run(days);
+          for (let d = 1; d <= days; d++) {
+            db.prepare("DELETE FROM issues WHERE title LIKE ?").run(`[Day ${d}]%`);
+          }
+          // Restore seeded accounts to their baseline status so state from a previous
+          // run (e.g. a day-5 restriction) doesn't leak into day 1 of this run.
+          const seedPath = path.join(__dirname, '..', 'data', 'seed_accounts.json');
+          if (fs.existsSync(seedPath)) {
+            const reset = db.prepare('UPDATE accounts SET status = ?, connection_status = ? WHERE id = ?');
+            for (const a of JSON.parse(fs.readFileSync(seedPath, 'utf-8')).accounts) {
+              reset.run(a.status || 'active', a.connection_status || 'connected', a.id);
+            }
+          }
+        })();
+
         // Calculate start date so Day N = (today - days + N)
         // This produces calendar-spread timestamps, e.g., for 5 days ending today:
         // Day 1 = 4 days ago, Day 2 = 3 days ago, ..., Day 5 = today
@@ -87,7 +110,7 @@ async function main() {
           const results = healthCheckService.runAll(day, timestamp);
           maintenanceLogService.generateFromHealthCheck(day, results, dateStr);
 
-          console.log(`  Total: ${results.total} | Healthy: ${results.healthy} | Warnings: ${results.warnings} | Errors: ${results.errors}`);
+          console.log(`  Total: ${results.total} | Healthy: ${results.healthy} | With warnings: ${results.warnings} | With errors: ${results.errors} (accounts)`);
 
           // Generate daily report
           reportService.generateDailyReport(day, 'json');
@@ -110,7 +133,7 @@ async function main() {
         console.log(`Running health check for Day ${dayNum}...`);
         const results = healthCheckService.runAll(dayNum);
         maintenanceLogService.generateFromHealthCheck(dayNum, results);
-        console.log(`Total: ${results.total} | Healthy: ${results.healthy} | Warnings: ${results.warnings} | Errors: ${results.errors}`);
+        console.log(`Total: ${results.total} | Healthy: ${results.healthy} | With warnings: ${results.warnings} | With errors: ${results.errors} (accounts)`);
       }
       break;
     }

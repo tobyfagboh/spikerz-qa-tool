@@ -122,13 +122,20 @@ class AccountService {
 
   /**
    * Bulk import accounts from an array.
+   * @param {Array} accounts
+   * @param {{ skipExisting?: boolean }} [options] - When true, accounts whose id
+   *   already exists are counted as skipped instead of reported as errors.
    */
-  bulkImport(accounts) {
+  bulkImport(accounts, { skipExisting = false } = {}) {
     const db = getDb();
-    const results = { created: 0, errors: [] };
+    const results = { created: 0, skipped: 0, errors: [] };
 
     const insertMany = db.transaction((items) => {
       for (const item of items) {
+        if (skipExisting && item.id && this.getById(item.id)) {
+          results.skipped++;
+          continue;
+        }
         try {
           this.create(item);
           results.created++;

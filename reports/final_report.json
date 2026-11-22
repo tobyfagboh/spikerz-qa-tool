@@ -1,11 +1,11 @@
 {
   "title": "Spikerz QA Final Assessment Report — 5-Day Monitoring Summary",
-  "generated_at": "2026-11-22T09:50:15.088Z",
+  "generated_at": "2026-11-22T13:44:43.008Z",
   "monitoring_period": {
     "days_monitored": 5,
     "total_health_checks": 75,
     "total_issues_found": 3,
-    "total_maintenance_entries": 14
+    "total_maintenance_entries": 18
   },
   "account_inventory": {
     "total": 15,
@@ -31,7 +31,9 @@
       "connected": 15,
       "errors": 0,
       "warnings": 0,
-      "avg_response_ms": 154
+      "error_messages": 0,
+      "warning_messages": 0,
+      "avg_response_ms": 169
     },
     {
       "day": 2,
@@ -39,23 +41,29 @@
       "connected": 14,
       "errors": 1,
       "warnings": 2,
-      "avg_response_ms": 161
+      "error_messages": 1,
+      "warning_messages": 2,
+      "avg_response_ms": 135
     },
     {
       "day": 3,
       "total": 15,
       "connected": 14,
-      "errors": 2,
-      "warnings": 0,
-      "avg_response_ms": 157
+      "errors": 1,
+      "warnings": 1,
+      "error_messages": 2,
+      "warning_messages": 1,
+      "avg_response_ms": 135
     },
     {
       "day": 4,
       "total": 15,
       "connected": 14,
-      "errors": 2,
+      "errors": 1,
       "warnings": 1,
-      "avg_response_ms": 117
+      "error_messages": 2,
+      "warning_messages": 1,
+      "avg_response_ms": 147
     },
     {
       "day": 5,
@@ -63,7 +71,9 @@
       "connected": 15,
       "errors": 0,
       "warnings": 3,
-      "avg_response_ms": 133
+      "error_messages": 0,
+      "warning_messages": 3,
+      "avg_response_ms": 131
     }
   ],
   "issues_summary": {
@@ -73,66 +83,67 @@
       "high": 2
     },
     "by_status": {
-      "open": 3
+      "resolved": 3
     },
     "details": [
       {
-        "id": 1,
+        "id": 31,
         "account_id": "TT-002",
         "title": "[Day 2] TIKTOK - TT-02 QA Creator Account: Sandbox account quota exceeded - daily API limit reached",
         "severity": "medium",
-        "status": "open",
+        "status": "resolved",
         "description": "Health check on Day 2 detected the following error(s) for TT-02 QA Creator Account (tiktok):\n\nSandbox account quota exceeded - daily API limit reached",
         "reproduction_steps": "1. Navigate to Spikerz QA Dashboard\n2. View account TT-02 QA Creator Account\n3. Run health check\n4. Observe error: Sandbox account quota exceeded - daily API limit reached",
         "evidence": null,
-        "root_cause": null,
+        "root_cause": "Platform API quota exhausted by request volume.",
         "recommended_action": "Wait for quota reset (usually 24 hours). Consider spacing out API requests or reducing check frequency for this platform.",
-        "created_at": "2026-11-22 09:50:15",
-        "resolved_at": null,
+        "created_at": "2026-11-22 13:44:42",
+        "resolved_at": "2026-11-20",
         "account_name": "TT-02 QA Creator Account",
         "platform": "tiktok"
       },
       {
-        "id": 2,
+        "id": 32,
         "account_id": "FB-002",
         "title": "[Day 3] FACEBOOK - FB-02 QA Business Page: Session expired - Graph API returned error 190; Permissions revoked: Session exp",
         "severity": "high",
-        "status": "open",
+        "status": "resolved",
         "description": "Health check on Day 3 detected the following error(s) for FB-02 QA Business Page (facebook):\n\nSession expired - Graph API returned error 190; Permissions revoked: Session expired",
         "reproduction_steps": "1. Navigate to Spikerz QA Dashboard\n2. View account FB-02 QA Business Page\n3. Run health check\n4. Observe error: Session expired - Graph API returned error 190; Permissions revoked: Session expired",
         "evidence": null,
-        "root_cause": null,
+        "root_cause": "Access token/session expired, which revoked API permissions.",
         "recommended_action": "Re-authenticate the account through the Spikerz UI. Navigate to Settings > Connected Accounts, remove the expired connection, and re-authorize with fresh credentials.",
-        "created_at": "2026-11-22 09:50:15",
-        "resolved_at": null,
+        "created_at": "2026-11-22 13:44:42",
+        "resolved_at": "2026-11-21",
         "account_name": "FB-02 QA Business Page",
         "platform": "facebook"
       },
       {
-        "id": 3,
+        "id": 33,
         "account_id": "LI-003",
         "title": "[Day 4] LINKEDIN - LI-03 QA Secondary Profile: Token expired - requires re-authentication; Permissions revoked: Token expired",
         "severity": "high",
-        "status": "open",
+        "status": "resolved",
         "description": "Health check on Day 4 detected the following error(s) for LI-03 QA Secondary Profile (linkedin):\n\nToken expired - requires re-authentication; Permissions revoked: Token expired",
         "reproduction_steps": "1. Navigate to Spikerz QA Dashboard\n2. View account LI-03 QA Secondary Profile\n3. Run health check\n4. Observe error: Token expired - requires re-authentication; Permissions revoked: Token expired",
         "evidence": null,
-        "root_cause": null,
+        "root_cause": "Access token/session expired, which revoked API permissions.",
         "recommended_action": "Re-authenticate the account through the Spikerz UI. Navigate to Settings > Connected Accounts, remove the expired connection, and re-authorize with fresh credentials.",
-        "created_at": "2026-11-22 09:50:15",
-        "resolved_at": null,
+        "created_at": "2026-11-22 13:44:43",
+        "resolved_at": "2026-11-22",
         "account_name": "LI-03 QA Secondary Profile",
         "platform": "linkedin"
       }
     ]
   },
   "maintenance_log_summary": {
-    "total_entries": 14,
+    "total_entries": 18,
     "by_category": {
       "setup": 1,
       "connection": 5,
       "failure": 3,
-      "observation": 2,
+      "observation": 3,
+      "corrective_action": 3,
       "token_refresh": 2,
       "restriction": 1
     },
@@ -146,12 +157,12 @@
         "description": "Initial seed: 15 test accounts imported across 5 platforms (LinkedIn, Facebook, Instagram, TikTok, X).",
         "action_taken": "Bulk import from seed_accounts.json",
         "outcome": "success",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:25:49",
         "account_name": null,
         "platform": null
       },
       {
-        "id": 2,
+        "id": 152,
         "day_number": 1,
         "log_date": "2026-11-18",
         "category": "connection",
@@ -159,12 +170,12 @@
         "description": "15 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:42",
         "account_name": null,
         "platform": null
       },
       {
-        "id": 3,
+        "id": 153,
         "day_number": 2,
         "log_date": "2026-11-19",
         "category": "connection",
@@ -172,12 +183,12 @@
         "description": "14 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:42",
         "account_name": null,
         "platform": null
       },
       {
-        "id": 4,
+        "id": 154,
         "day_number": 2,
         "log_date": "2026-11-19",
         "category": "failure",
@@ -185,12 +196,12 @@
         "description": "Health check failed: Sandbox account quota exceeded - daily API limit reached",
         "action_taken": "Issue auto-created for investigation",
         "outcome": "requires_attention",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:42",
         "account_name": "TT-02 QA Creator Account",
         "platform": "tiktok"
       },
       {
-        "id": 5,
+        "id": 155,
         "day_number": 2,
         "log_date": "2026-11-19",
         "category": "observation",
@@ -198,12 +209,12 @@
         "description": "Warning detected: API rate limit hit - 429 response (retry after 300s)",
         "action_taken": "Monitoring - no immediate action required",
         "outcome": "monitoring",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:42",
         "account_name": "IG-01 QA Business Account",
         "platform": "instagram"
       },
       {
-        "id": 6,
+        "id": 156,
         "day_number": 3,
         "log_date": "2026-11-20",
         "category": "connection",
@@ -211,12 +222,12 @@
         "description": "14 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": null,
         "platform": null
       },
       {
-        "id": 7,
+        "id": 157,
         "day_number": 3,
         "log_date": "2026-11-20",
         "category": "failure",
@@ -224,12 +235,38 @@
         "description": "Health check failed: Session expired - Graph API returned error 190; Permissions revoked: Session expired",
         "action_taken": "Issue auto-created for investigation",
         "outcome": "requires_attention",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": "FB-02 QA Business Page",
         "platform": "facebook"
       },
       {
-        "id": 8,
+        "id": 158,
+        "day_number": 3,
+        "log_date": "2026-11-20",
+        "category": "observation",
+        "account_id": "LI-002",
+        "description": "Warning detected: Rate limit approaching (80% of daily quota)",
+        "action_taken": "Monitoring - no immediate action required",
+        "outcome": "monitoring",
+        "created_at": "2026-11-22 13:44:43",
+        "account_name": "LI-02 QA Company Page",
+        "platform": "linkedin"
+      },
+      {
+        "id": 159,
+        "day_number": 3,
+        "log_date": "2026-11-20",
+        "category": "corrective_action",
+        "account_id": "TT-002",
+        "description": "Resolved: [Day 2] TIKTOK - TT-02 QA Creator Account: Sandbox account quota exceeded - daily API limit reached",
+        "action_taken": "Waited for quota reset; request volume reduced",
+        "outcome": "resolved",
+        "created_at": "2026-11-22 13:44:43",
+        "account_name": "TT-02 QA Creator Account",
+        "platform": "tiktok"
+      },
+      {
+        "id": 160,
         "day_number": 4,
         "log_date": "2026-11-21",
         "category": "connection",
@@ -237,12 +274,12 @@
         "description": "14 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": null,
         "platform": null
       },
       {
-        "id": 9,
+        "id": 161,
         "day_number": 4,
         "log_date": "2026-11-21",
         "category": "failure",
@@ -250,12 +287,12 @@
         "description": "Health check failed: Token expired - requires re-authentication; Permissions revoked: Token expired",
         "action_taken": "Issue auto-created for investigation",
         "outcome": "requires_attention",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": "LI-03 QA Secondary Profile",
         "platform": "linkedin"
       },
       {
-        "id": 10,
+        "id": 162,
         "day_number": 4,
         "log_date": "2026-11-21",
         "category": "observation",
@@ -263,12 +300,25 @@
         "description": "Warning detected: App-level rate limit at 90% - consider spacing requests",
         "action_taken": "Monitoring - no immediate action required",
         "outcome": "monitoring",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": "X-01 QA Business Account",
         "platform": "x"
       },
       {
-        "id": 11,
+        "id": 163,
+        "day_number": 4,
+        "log_date": "2026-11-21",
+        "category": "corrective_action",
+        "account_id": "FB-002",
+        "description": "Resolved: [Day 3] FACEBOOK - FB-02 QA Business Page: Session expired - Graph API returned error 190; Permissions revoked: Session exp",
+        "action_taken": "Re-authenticated account via Spikerz Settings > Connected Accounts",
+        "outcome": "resolved",
+        "created_at": "2026-11-22 13:44:43",
+        "account_name": "FB-02 QA Business Page",
+        "platform": "facebook"
+      },
+      {
+        "id": 164,
         "day_number": 5,
         "log_date": "2026-11-22",
         "category": "connection",
@@ -276,68 +326,116 @@
         "description": "15 of 15 accounts passed health check with no issues.",
         "action_taken": null,
         "outcome": "success",
-        "created_at": "2026-11-22 09:50:15",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": null,
         "platform": null
       },
       {
-        "id": 12,
+        "id": 165,
         "day_number": 5,
         "log_date": "2026-11-22",
         "category": "token_refresh",
         "account_id": "FB-002",
         "description": "Warning detected: Page access token nearing expiry (2 days remaining)",
-        "action_taken": "Monitoring - no immediate action required",
-        "outcome": "monitoring",
-        "created_at": "2026-11-22 09:50:15",
+        "action_taken": "Scheduled proactive token refresh before expiry",
+        "outcome": "requires_attention",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": "FB-02 QA Business Page",
         "platform": "facebook"
       },
       {
-        "id": 13,
+        "id": 166,
         "day_number": 5,
         "log_date": "2026-11-22",
         "category": "token_refresh",
         "account_id": "FB-003",
         "description": "Warning detected: Page access token nearing expiry (2 days remaining)",
-        "action_taken": "Monitoring - no immediate action required",
-        "outcome": "monitoring",
-        "created_at": "2026-11-22 09:50:15",
+        "action_taken": "Scheduled proactive token refresh before expiry",
+        "outcome": "requires_attention",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": "FB-03 QA Community Page",
         "platform": "facebook"
       },
       {
-        "id": 14,
+        "id": 167,
         "day_number": 5,
         "log_date": "2026-11-22",
         "category": "restriction",
         "account_id": "TT-003",
         "description": "Warning detected: Account flagged for review - automated activity detected",
-        "action_taken": "Monitoring - no immediate action required",
-        "outcome": "monitoring",
-        "created_at": "2026-11-22 09:50:15",
+        "action_taken": "Paused automated activity; manual review of account in platform portal required",
+        "outcome": "requires_attention",
+        "created_at": "2026-11-22 13:44:43",
         "account_name": "TT-03 QA Personal Account",
         "platform": "tiktok"
+      },
+      {
+        "id": 168,
+        "day_number": 5,
+        "log_date": "2026-11-22",
+        "category": "corrective_action",
+        "account_id": "LI-003",
+        "description": "Resolved: [Day 4] LINKEDIN - LI-03 QA Secondary Profile: Token expired - requires re-authentication; Permissions revoked: Token expired",
+        "action_taken": "Re-authenticated account via Spikerz Settings > Connected Accounts",
+        "outcome": "resolved",
+        "created_at": "2026-11-22 13:44:43",
+        "account_name": "LI-03 QA Secondary Profile",
+        "platform": "linkedin"
       }
     ]
   },
   "recommendations": [
     {
+      "type": "finding",
+      "priority": "high",
+      "area": "Account Restriction",
+      "accounts": [
+        "TT-003"
+      ],
+      "recommendation": "TT-003 (from day 5) was flagged for review / restricted by the platform. Pause all automated activity on this account, review it manually in the platform's developer portal, and keep a standby test account ready in case it is suspended. Reduce automated posting/check frequency on this platform to avoid repeat flags."
+    },
+    {
+      "type": "finding",
       "priority": "high",
       "area": "Token Management",
-      "recommendation": "Implement proactive token refresh logic. Several accounts experienced token expiry during monitoring. Consider adding a background job that refreshes tokens 24 hours before expiry."
+      "accounts": [
+        "FB-002",
+        "LI-003",
+        "FB-003"
+      ],
+      "recommendation": "During monitoring, tokens expired on FB-002 (day 3), LI-003 (day 4); tokens were close to expiry on FB-002 (day 5), FB-003 (day 5). Expired tokens revoked API permissions and caused health check failures. Add a background job that refreshes tokens at least 24 hours before expiry, and treat \"expiring soon\" warnings as action items rather than observations."
     },
     {
+      "type": "finding",
       "priority": "medium",
-      "area": "Rate Limiting",
-      "recommendation": "Implement request throttling and queuing. Multiple platforms showed rate limit warnings. Stagger health checks across the day rather than running all simultaneously."
+      "area": "Rate Limits & Quotas",
+      "accounts": [
+        "IG-001",
+        "TT-002",
+        "LI-002",
+        "X-001"
+      ],
+      "recommendation": "Rate limit or quota problems hit IG-001 (day 2), TT-002 (day 2), LI-002 (day 3), X-001 (day 4) across 4 platforms (instagram, tiktok, linkedin, x). Add per-platform throttling with backoff on 429 responses, and stagger health checks across the day instead of running all accounts at 08:00."
     },
     {
+      "type": "finding",
+      "priority": "low",
+      "area": "Issue Follow-up",
+      "accounts": [
+        "TT-002",
+        "FB-002",
+        "LI-003"
+      ],
+      "recommendation": "All 3 issues raised during monitoring were resolved and confirmed by a passing health check (TT-002 (day 2), FB-002 (day 3), LI-003 (day 4)). Keep the root causes on record and watch these accounts for recurrence."
+    },
+    {
+      "type": "general",
       "priority": "medium",
       "area": "Alerting",
-      "recommendation": "Set up real-time alerts (Slack/email) for critical failures. Currently issues are logged but not pushed to the team."
+      "recommendation": "Set up real-time alerts (Slack/email) for high-severity issues and restrictions. Currently issues are logged but not pushed to the team."
     },
     {
+      "type": "general",
       "priority": "low",
       "area": "Scaling",
       "recommendation": "For 100+ accounts, migrate from SQLite to PostgreSQL, add connection pooling, and implement parallel health checks with configurable concurrency limits."

@@ -96,15 +96,62 @@ class MaintenanceLogService {
             ? 'restriction'
             : 'observation';
 
+      // Expiring tokens and restrictions need action, not just monitoring
+      const { action_taken, outcome } =
+        category === 'token_refresh'
+          ? { action_taken: 'Scheduled proactive token refresh before expiry', outcome: 'requires_attention' }
+          : category === 'restriction'
+            ? { action_taken: 'Paused automated activity; manual review of account in platform portal required', outcome: 'requires_attention' }
+            : { action_taken: 'Monitoring - no immediate action required', outcome: 'monitoring' };
+
       this.add({
         day_number: dayNumber,
         log_date: date,
         category,
         account_id: warn.account_id,
         description: `Warning detected: ${warn.warnings.join('; ')}`,
-        action_taken: 'Monitoring - no immediate action required',
-        outcome: 'monitoring'
+        action_taken,
+        outcome
       });
+    }
+
+    // Resolve open issues for accounts that have recovered
+    this._resolveRecovered(dayNumber, healthCheckSummary, date);
+  }
+
+  /**
+   * Close open issues for accounts that now pass with no errors, and log the
+   * corrective action so the report shows the fix, not just the failure.
+   */
+  _resolveRecovered(dayNumber, healthCheckSummary, date) {
+    const db = getDb();
+    const recovered = healthCheckSummary.results.filter(
+      r => r.connection_status === 'connected' && r.errors.length === 0
+    );
+    const findOpen = db.prepare("SELECT * FROM issues WHERE account_id = ? AND status IN ('open', 'investigating')");
+    const resolve = db.prepare("UPDATE issues SET status = 'resolved', resolved_at = ?, root_cause = COALESCE(root_cause, ?) WHERE id = ?");
+
+    for (const r of recovered) {
+      for (const issue of findOpen.all(r.account_id)) {
+        const text = (issue.description || '').toLowerCase();
+        const { rootCause, action } =
+          text.includes('expired')
+            ? { rootCause: 'Access token/session expired, which revoked API permissions.', action: 'Re-authenticated account via Spikerz Settings > Connected Accounts' }
+            : text.includes('quota') || text.includes('rate limit')
+              ? { rootCause: 'Platform API quota exhausted by request volume.', action: 'Waited for quota reset; request volume reduced' }
+              : { rootCause: 'Transient platform error.', action: 'Retried connection' };
+
+        resolve.run(date, rootCause, issue.id);
+        this.add({
+          day_number: dayNumber,
+          log_date: date,
+          category: 'corrective_action',
+          account_id: r.account_id,
+          description: `Resolved: ${issue.title}`,
+          action_taken: action,
+          outcome: 'resolved'
+        });
+      }
     }
   }
 }

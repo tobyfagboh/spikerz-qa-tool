@@ -4,3 +4,5 @@ data/*.db
 coverage/
 *.log
 .DS_Store
+data/*.db-shm
+data/*.db-wal
