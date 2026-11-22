@@ -1,6 +1,6 @@
 {
   "title": "Spikerz QA Health Check Report - Day 3",
-  "generated_at": "2026-11-22T09:50:15.075Z",
+  "generated_at": "2026-11-22T13:44:43.002Z",
   "day_number": 3,
   "summary": {
     "total_accounts": 15,
@@ -11,16 +11,18 @@
     "tokens_expired": 1,
     "permissions_ok": 14,
     "permissions_issues": 1,
+    "accounts_with_errors": 1,
+    "accounts_with_warnings": 1,
     "total_errors": 2,
-    "total_warnings": 0,
-    "avg_response_time_ms": 157,
+    "total_warnings": 1,
+    "avg_response_time_ms": 135,
     "issues_created": 1
   },
   "by_platform": {
     "facebook": {
       "total": 3,
       "connected": 2,
-      "errors": 2,
+      "errors": 1,
       "warnings": 0
     },
     "instagram": {
@@ -33,7 +35,7 @@
       "total": 3,
       "connected": 3,
       "errors": 0,
-      "warnings": 0
+      "warnings": 1
     },
     "tiktok": {
       "total": 3,
@@ -50,7 +52,7 @@
   },
   "checks": [
     {
-      "id": 31,
+      "id": 781,
       "account_id": "FB-001",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -64,14 +66,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 73,
+      "response_time_ms": 62,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"pages_show_list\",\"pages_read_engagement\",\"pages_manage_posts\"]}}",
       "account_name": "FB-01 QA Test Profile",
       "platform": "facebook",
       "account_type": "profile"
     },
     {
-      "id": 32,
+      "id": 782,
       "account_id": "FB-002",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -89,14 +91,14 @@
         "Permissions revoked: Session expired"
       ],
       "warnings": [],
-      "response_time_ms": 149,
+      "response_time_ms": 82,
       "raw_response": "{\"connection\":{\"connected\":false,\"reason\":\"Session expired - Graph API returned error 190\"},\"permissions\":{\"status\":\"revoked\",\"permissions\":[],\"reason\":\"Session expired\"}}",
       "account_name": "FB-02 QA Business Page",
       "platform": "facebook",
       "account_type": "page"
     },
     {
-      "id": 33,
+      "id": 783,
       "account_id": "FB-003",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -110,14 +112,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 202,
+      "response_time_ms": 151,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"pages_show_list\",\"pages_read_engagement\",\"pages_manage_posts\"]}}",
       "account_name": "FB-03 QA Community Page",
       "platform": "facebook",
       "account_type": "page"
     },
     {
-      "id": 34,
+      "id": 784,
       "account_id": "IG-001",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -132,14 +134,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 96,
+      "response_time_ms": 82,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"instagram_basic\",\"instagram_content_publish\",\"instagram_manage_insights\"]}}",
       "account_name": "IG-01 QA Business Account",
       "platform": "instagram",
       "account_type": "business"
     },
     {
-      "id": 35,
+      "id": 785,
       "account_id": "IG-002",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -154,14 +156,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 83,
+      "response_time_ms": 159,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"instagram_basic\",\"instagram_content_publish\",\"instagram_manage_insights\"]}}",
       "account_name": "IG-02 QA Creator Account",
       "platform": "instagram",
       "account_type": "creator"
     },
     {
-      "id": 36,
+      "id": 786,
       "account_id": "IG-003",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -174,14 +176,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 152,
+      "response_time_ms": 138,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"instagram_basic\",\"instagram_content_publish\",\"instagram_manage_insights\"]}}",
       "account_name": "IG-03 QA Personal Account",
       "platform": "instagram",
       "account_type": "personal"
     },
     {
-      "id": 37,
+      "id": 787,
       "account_id": "LI-001",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -195,14 +197,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 141,
+      "response_time_ms": 198,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"r_liteprofile\",\"r_emailaddress\",\"w_member_social\"]}}",
       "account_name": "LI-01 QA Test Profile",
       "platform": "linkedin",
       "account_type": "personal"
     },
     {
-      "id": 38,
+      "id": 788,
       "account_id": "LI-002",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -215,15 +217,17 @@
       ],
       "permission_status": "ok",
       "errors": [],
-      "warnings": [],
-      "response_time_ms": 157,
-      "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"r_liteprofile\",\"r_emailaddress\",\"w_member_social\"]}}",
+      "warnings": [
+        "Rate limit approaching (80% of daily quota)"
+      ],
+      "response_time_ms": 66,
+      "raw_response": "{\"connection\":{\"connected\":true,\"warning\":\"Rate limit approaching (80% of daily quota)\"},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"r_liteprofile\",\"r_emailaddress\",\"w_member_social\"]}}",
       "account_name": "LI-02 QA Company Page",
       "platform": "linkedin",
       "account_type": "page"
     },
     {
-      "id": 39,
+      "id": 789,
       "account_id": "LI-003",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -236,14 +240,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 169,
+      "response_time_ms": 165,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"r_liteprofile\",\"r_emailaddress\",\"w_member_social\"]}}",
       "account_name": "LI-03 QA Secondary Profile",
       "platform": "linkedin",
       "account_type": "personal"
     },
     {
-      "id": 40,
+      "id": 790,
       "account_id": "TT-001",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -257,14 +261,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 218,
+      "response_time_ms": 52,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"user.info.basic\",\"video.list\",\"video.publish\"]}}",
       "account_name": "TT-01 QA Business Account",
       "platform": "tiktok",
       "account_type": "business"
     },
     {
-      "id": 41,
+      "id": 791,
       "account_id": "TT-002",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -278,14 +282,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 239,
+      "response_time_ms": 219,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"user.info.basic\",\"video.list\",\"video.publish\"]}}",
       "account_name": "TT-02 QA Creator Account",
       "platform": "tiktok",
       "account_type": "creator"
     },
     {
-      "id": 42,
+      "id": 792,
       "account_id": "TT-003",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -298,14 +302,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 168,
+      "response_time_ms": 184,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"user.info.basic\",\"video.list\",\"video.publish\"]}}",
       "account_name": "TT-03 QA Personal Account",
       "platform": "tiktok",
       "account_type": "personal"
     },
     {
-      "id": 43,
+      "id": 793,
       "account_id": "X-001",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -320,14 +324,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 206,
+      "response_time_ms": 132,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"tweet.read\",\"tweet.write\",\"users.read\"]}}",
       "account_name": "X-01 QA Business Account",
       "platform": "x",
       "account_type": "business"
     },
     {
-      "id": 44,
+      "id": 794,
       "account_id": "X-002",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -341,14 +345,14 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 236,
+      "response_time_ms": 156,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"tweet.read\",\"tweet.write\",\"users.read\"]}}",
       "account_name": "X-02 QA Personal Account",
       "platform": "x",
       "account_type": "personal"
     },
     {
-      "id": 45,
+      "id": 795,
       "account_id": "X-003",
       "check_timestamp": "2026-11-20T08:00:00.000Z",
       "day_number": 3,
@@ -361,7 +365,7 @@
       "permission_status": "ok",
       "errors": [],
       "warnings": [],
-      "response_time_ms": 63,
+      "response_time_ms": 184,
       "raw_response": "{\"connection\":{\"connected\":true},\"permissions\":{\"status\":\"ok\",\"permissions\":[\"tweet.read\",\"tweet.write\",\"users.read\"]}}",
       "account_name": "X-03 QA Interaction Account",
       "platform": "x",
@@ -370,7 +374,7 @@
   ],
   "issues": [
     {
-      "id": 2,
+      "id": 32,
       "account_id": "FB-002",
       "title": "[Day 3] FACEBOOK - FB-02 QA Business Page: Session expired - Graph API returned error 190; Permissions revoked: Session exp",
       "severity": "high",
@@ -380,7 +384,7 @@
       "evidence": null,
       "root_cause": null,
       "recommended_action": "Re-authenticate the account through the Spikerz UI. Navigate to Settings > Connected Accounts, remove the expired connection, and re-authorize with fresh credentials.",
-      "created_at": "2026-11-22 09:50:15",
+      "created_at": "2026-11-22 13:44:42",
       "resolved_at": null,
       "account_name": "FB-02 QA Business Page",
       "platform": "facebook"
@@ -388,7 +392,7 @@
   ],
   "maintenance_log": [
     {
-      "id": 6,
+      "id": 156,
       "day_number": 3,
       "log_date": "2026-11-20",
       "category": "connection",
@@ -396,12 +400,12 @@
       "description": "14 of 15 accounts passed health check with no issues.",
       "action_taken": null,
       "outcome": "success",
-      "created_at": "2026-11-22 09:50:15",
+      "created_at": "2026-11-22 13:44:43",
       "account_name": null,
       "platform": null
     },
     {
-      "id": 7,
+      "id": 157,
       "day_number": 3,
       "log_date": "2026-11-20",
       "category": "failure",
@@ -409,9 +413,35 @@
       "description": "Health check failed: Session expired - Graph API returned error 190; Permissions revoked: Session expired",
       "action_taken": "Issue auto-created for investigation",
       "outcome": "requires_attention",
-      "created_at": "2026-11-22 09:50:15",
+      "created_at": "2026-11-22 13:44:43",
       "account_name": "FB-02 QA Business Page",
       "platform": "facebook"
+    },
+    {
+      "id": 158,
+      "day_number": 3,
+      "log_date": "2026-11-20",
+      "category": "observation",
+      "account_id": "LI-002",
+      "description": "Warning detected: Rate limit approaching (80% of daily quota)",
+      "action_taken": "Monitoring - no immediate action required",
+      "outcome": "monitoring",
+      "created_at": "2026-11-22 13:44:43",
+      "account_name": "LI-02 QA Company Page",
+      "platform": "linkedin"
+    },
+    {
+      "id": 159,
+      "day_number": 3,
+      "log_date": "2026-11-20",
+      "category": "corrective_action",
+      "account_id": "TT-002",
+      "description": "Resolved: [Day 2] TIKTOK - TT-02 QA Creator Account: Sandbox account quota exceeded - daily API limit reached",
+      "action_taken": "Waited for quota reset; request volume reduced",
+      "outcome": "resolved",
+      "created_at": "2026-11-22 13:44:43",
+      "account_name": "TT-02 QA Creator Account",
+      "platform": "tiktok"
     }
   ]
 }

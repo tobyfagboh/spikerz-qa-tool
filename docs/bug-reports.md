@@ -7,7 +7,7 @@
 | **Severity** | Medium |
 | **Platform** | TikTok |
 | **Account** | TT-02 QA Creator Account |
-| **Status** | Open |
+| **Status** | Resolved (Day 3) |
 | **Detected** | Day 2 health check |
 
 ### Description
@@ -43,7 +43,7 @@ TikTok sandbox accounts have strict daily API call quotas. The combined health c
 | **Severity** | High |
 | **Platform** | Facebook |
 | **Account** | FB-02 QA Business Page |
-| **Status** | Open |
+| **Status** | Resolved (Day 4) |
 | **Detected** | Day 3 health check |
 
 ### Description
@@ -79,7 +79,7 @@ Facebook short-lived tokens expire after approximately 1 hour. The token exchang
 | **Severity** | High |
 | **Platform** | LinkedIn |
 | **Account** | LI-03 QA Secondary Profile |
-| **Status** | Open |
+| **Status** | Resolved (Day 5) |
 | **Detected** | Day 4 health check |
 
 ### Description
@@ -111,9 +111,9 @@ LinkedIn OAuth 2.0 access tokens have a 60-day lifetime. The test account's toke
 
 | Bug ID | Platform | Severity | Day | Status | Type |
 |--------|----------|----------|-----|--------|------|
-| BUG-001 | TikTok | Medium | 2 | Open | Quota exceeded |
-| BUG-002 | Facebook | High | 3 | Open | Session expired |
-| BUG-003 | LinkedIn | High | 4 | Open | Token expired |
+| BUG-001 | TikTok | Medium | 2 | Resolved (Day 3) | Quota exceeded |
+| BUG-002 | Facebook | High | 3 | Resolved (Day 4) | Session expired |
+| BUG-003 | LinkedIn | High | 4 | Resolved (Day 5) | Token expired |
 
 ### Patterns Observed
 1. **Token/session management** is the primary failure mode across platforms

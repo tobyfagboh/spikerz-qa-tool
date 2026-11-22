@@ -28,7 +28,7 @@ This tool provides:
 
 ### Prerequisites
 
-- Node.js 18+ installed
+- Node.js 20 or 22 LTS installed
 - npm or yarn
 
 ### Installation
@@ -37,6 +37,9 @@ This tool provides:
 # Clone the repository
 git clone <repo-url>
 cd spikerz-qa-tool
+
+# Select the supported Node.js version
+nvm use
 
 # Install dependencies
 npm install
@@ -149,7 +152,7 @@ Automatically created when health checks detect errors. Includes severity (criti
 
 GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and PR to `main`:
 
-1. **Tests** — Runs full test suite on Node.js 18.x and 20.x
+1. **Tests** — Runs full test suite on Node.js 20.x and 22.x
 2. **Coverage** — Generates test coverage report
 3. **Simulation** — Seeds the database and runs the full 5-day health check simulation
 4. **Artifacts** — Uploads generated reports as build artifacts (retained 30 days)

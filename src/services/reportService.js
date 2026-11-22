@@ -44,6 +44,10 @@ class ReportService {
         tokens_expired: checks.filter(c => c.token_validity === 'expired').length,
         permissions_ok: checks.filter(c => c.permission_status === 'ok').length,
         permissions_issues: checks.filter(c => c.permission_status !== 'ok').length,
+        // Accounts affected (matches CLI health-check output)
+        accounts_with_errors: checks.filter(c => JSON.parse(c.errors || '[]').length > 0).length,
+        accounts_with_warnings: checks.filter(c => JSON.parse(c.warnings || '[]').length > 0).length,
+        // Raw message totals (one account can report several errors/warnings)
         total_errors: checks.reduce((sum, c) => sum + JSON.parse(c.errors || '[]').length, 0),
         total_warnings: checks.reduce((sum, c) => sum + JSON.parse(c.warnings || '[]').length, 0),
         avg_response_time_ms: Math.round(checks.reduce((sum, c) => sum + (c.response_time_ms || 0), 0) / (checks.length || 1)),
@@ -99,8 +103,12 @@ class ReportService {
         day,
         total: dayChecks.length,
         connected: dayChecks.filter(c => c.connection_status === 'connected').length,
-        errors: dayChecks.reduce((sum, c) => sum + JSON.parse(c.errors || '[]').length, 0),
-        warnings: dayChecks.reduce((sum, c) => sum + JSON.parse(c.warnings || '[]').length, 0),
+        // Accounts affected (matches CLI health-check output)
+        errors: dayChecks.filter(c => JSON.parse(c.errors || '[]').length > 0).length,
+        warnings: dayChecks.filter(c => JSON.parse(c.warnings || '[]').length > 0).length,
+        // Raw message totals
+        error_messages: dayChecks.reduce((sum, c) => sum + JSON.parse(c.errors || '[]').length, 0),
+        warning_messages: dayChecks.reduce((sum, c) => sum + JSON.parse(c.warnings || '[]').length, 0),
         avg_response_ms: Math.round(dayChecks.reduce((s, c) => s + (c.response_time_ms || 0), 0) / dayChecks.length)
       });
     }
@@ -149,8 +157,8 @@ class ReportService {
       }
       platforms[check.platform].total++;
       if (check.connection_status === 'connected') platforms[check.platform].connected++;
-      platforms[check.platform].errors += JSON.parse(check.errors || '[]').length;
-      platforms[check.platform].warnings += JSON.parse(check.warnings || '[]').length;
+      if (JSON.parse(check.errors || '[]').length > 0) platforms[check.platform].errors++;
+      if (JSON.parse(check.warnings || '[]').length > 0) platforms[check.platform].warnings++;
     }
     return platforms;
   }
@@ -172,38 +180,108 @@ class ReportService {
    */
   _generateRecommendations(checks, issues) {
     const recs = [];
+    const msgs = c => [...JSON.parse(c.errors || '[]'), ...JSON.parse(c.warnings || '[]')].map(m => m.toLowerCase());
+    // "TT-003 (day 5)" style labels, de-duplicated per account+day
+    const label = list => [...new Set(list.map(c => `${c.account_id} (day ${c.day_number})`))].join(', ');
 
-    const tokenIssues = issues.filter(i => i.title.toLowerCase().includes('token') || i.title.toLowerCase().includes('expired'));
-    if (tokenIssues.length > 0) {
+    // --- Findings: driven by what happened during monitoring ---
+
+    // Restrictions / flags — highest risk: can escalate to suspension
+    const restricted = checks.filter(c => c.account_status === 'restricted' || msgs(c).some(m => m.includes('flagged') || m.includes('restricted')));
+    if (restricted.length > 0) {
+      const ids = [...new Set(restricted.map(c => c.account_id))];
+      const firstFlag = ids.map(id => restricted.find(c => c.account_id === id)).map(c => `${c.account_id} (from day ${c.day_number})`).join(', ');
       recs.push({
+        type: 'finding',
+        priority: 'high',
+        area: 'Account Restriction',
+        accounts: ids,
+        recommendation: `${firstFlag} was flagged for review / restricted by the platform. Pause all automated activity on ${ids.length === 1 ? 'this account' : 'these accounts'}, review it manually in the platform's developer portal, and keep a standby test account ready in case it is suspended. Reduce automated posting/check frequency on this platform to avoid repeat flags.`
+      });
+    }
+
+    // Token / session expiry
+    const expired = checks.filter(c => c.token_validity === 'expired');
+    const expiring = checks.filter(c => c.token_validity === 'expiring_soon');
+    if (expired.length > 0 || expiring.length > 0) {
+      const parts = [];
+      if (expired.length) parts.push(`tokens expired on ${label(expired)}`);
+      if (expiring.length) parts.push(`tokens were close to expiry on ${label(expiring)}`);
+      recs.push({
+        type: 'finding',
         priority: 'high',
         area: 'Token Management',
-        recommendation: 'Implement proactive token refresh logic. Several accounts experienced token expiry during monitoring. Consider adding a background job that refreshes tokens 24 hours before expiry.'
+        accounts: [...new Set([...expired, ...expiring].map(c => c.account_id))],
+        recommendation: `During monitoring, ${parts.join('; ')}. Expired tokens revoked API permissions and caused health check failures. Add a background job that refreshes tokens at least 24 hours before expiry, and treat "expiring soon" warnings as action items rather than observations.`
       });
     }
 
-    const rateLimitWarnings = checks.filter(c => JSON.parse(c.warnings || '[]').some(w => w.toLowerCase().includes('rate limit')));
-    if (rateLimitWarnings.length > 0) {
+    // Rate limits and quotas
+    const rateLimited = checks.filter(c => msgs(c).some(m => m.includes('rate limit') || m.includes('quota')));
+    if (rateLimited.length > 0) {
+      const platforms = [...new Set(rateLimited.map(c => c.platform))];
       recs.push({
+        type: 'finding',
         priority: 'medium',
-        area: 'Rate Limiting',
-        recommendation: 'Implement request throttling and queuing. Multiple platforms showed rate limit warnings. Stagger health checks across the day rather than running all simultaneously.'
+        area: 'Rate Limits & Quotas',
+        accounts: [...new Set(rateLimited.map(c => c.account_id))],
+        recommendation: `Rate limit or quota problems hit ${label(rateLimited)} across ${platforms.length} platform${platforms.length !== 1 ? 's' : ''} (${platforms.join(', ')}). Add per-platform throttling with backoff on 429 responses, and stagger health checks across the day instead of running all accounts at 08:00.`
       });
     }
 
+    // Issue follow-up
+    // Refer to issues by account + day; DB ids keep growing across simulation runs
+    const ref = i => `${i.account_id} (day ${(i.title.match(/\[Day (\d+)\]/) || [])[1] || '?'})`;
+    const open = issues.filter(i => i.status === 'open' || i.status === 'investigating');
+    const resolved = issues.filter(i => i.status === 'resolved');
+    if (open.length > 0) {
+      recs.push({
+        type: 'finding',
+        priority: 'high',
+        area: 'Open Issues',
+        accounts: [...new Set(open.map(i => i.account_id))],
+        recommendation: `${open.length} of ${issues.length} issues are still open: ${open.map(ref).join(', ')}. Apply the recommended action on each, confirm with a follow-up health check, and record the root cause before closing.`
+      });
+    } else if (resolved.length > 0) {
+      recs.push({
+        type: 'finding',
+        priority: 'low',
+        area: 'Issue Follow-up',
+        accounts: [...new Set(resolved.map(i => i.account_id))],
+        recommendation: `All ${resolved.length} issues raised during monitoring were resolved and confirmed by a passing health check (${resolved.map(ref).join(', ')}). Keep the root causes on record and watch these accounts for recurrence.`
+      });
+    }
+
+    // --- General improvements: not derived from this run's data ---
     recs.push({
+      type: 'general',
       priority: 'medium',
       area: 'Alerting',
-      recommendation: 'Set up real-time alerts (Slack/email) for critical failures. Currently issues are logged but not pushed to the team.'
+      recommendation: 'Set up real-time alerts (Slack/email) for high-severity issues and restrictions. Currently issues are logged but not pushed to the team.'
     });
 
     recs.push({
+      type: 'general',
       priority: 'low',
       area: 'Scaling',
       recommendation: 'For 100+ accounts, migrate from SQLite to PostgreSQL, add connection pooling, and implement parallel health checks with configurable concurrency limits.'
     });
 
     return recs;
+  }
+
+  /**
+   * Render one recommendation card for the HTML report.
+   */
+  _recCard(rec) {
+    return `
+    <div class="rec-card ${rec.priority}">
+      <div class="rec-header">
+        <span class="rec-area">${rec.area}</span>
+        ${this._badge(rec.priority, rec.priority === 'high' ? 'red' : rec.priority === 'medium' ? 'amber' : 'green')}
+      </div>
+      <div class="rec-text">${rec.recommendation}</div>
+    </div>`;
   }
 
   /**
@@ -294,8 +372,8 @@ class ReportService {
     <div class="card"><div class="label">Total Accounts</div><div class="value">${summary.total_accounts || 0}</div></div>
     <div class="card"><div class="label">Connected</div><div class="value green">${summary.connected || 0}</div></div>
     <div class="card"><div class="label">Disconnected</div><div class="value red">${summary.disconnected || 0}</div></div>
-    <div class="card"><div class="label">Errors</div><div class="value red">${summary.total_errors || 0}</div></div>
-    <div class="card"><div class="label">Warnings</div><div class="value amber">${summary.total_warnings || 0}</div></div>
+    <div class="card"><div class="label">Accounts with Errors</div><div class="value red">${summary.accounts_with_errors || 0}</div></div>
+    <div class="card"><div class="label">Accounts with Warnings</div><div class="value amber">${summary.accounts_with_warnings || 0}</div></div>
     <div class="card"><div class="label">Avg Response</div><div class="value">${summary.avg_response_time_ms || 0}ms</div></div>
   </div>
 
@@ -423,7 +501,7 @@ class ReportService {
     <h2 class="section-title">Daily Health Trend</h2>
     <table>
       <thead>
-        <tr><th>Day</th><th>Date</th><th>Accounts</th><th>Connected</th><th>Errors</th><th>Warnings</th><th>Avg Response</th><th>Status</th></tr>
+        <tr><th>Day</th><th>Date</th><th>Accounts</th><th>Connected</th><th>Accounts w/ Errors</th><th>Accounts w/ Warnings</th><th>Avg Response</th><th>Status</th></tr>
       </thead>
       <tbody>
         ${dailySummaries.map((d, i) => `
@@ -450,7 +528,7 @@ class ReportService {
         <div class="day-label">${dateLabels[i] || 'Day ' + d.day}</div>
         <div class="day-val ${d.connected === d.total ? 'green' : 'red'}">${Math.round((d.connected / d.total) * 100)}%</div>
         <div class="day-detail">${d.connected}/${d.total} connected</div>
-        <div class="day-detail">${d.errors} error${d.errors !== 1 ? 's' : ''} · ${d.warnings} warning${d.warnings !== 1 ? 's' : ''}</div>
+        <div class="day-detail">${d.errors} with errors · ${d.warnings} with warnings</div>
       </div>`).join('')}
     </div>
   </div>
@@ -473,7 +551,7 @@ class ReportService {
           <td>${issue.account_name}</td>
           <td>${this._badge(issue.severity, issue.severity === 'high' ? 'red' : issue.severity === 'medium' ? 'amber' : 'gray')}</td>
           <td style="max-width: 300px; white-space: normal;">${issue.description.split('\\n')[0]}</td>
-          <td>${this._badge(issue.status, 'gray')}</td>
+          <td>${this._badge(issue.status, issue.status === 'resolved' ? 'green' : 'gray')}</td>
         </tr>`;
         }).join('')}
       </tbody>
@@ -490,6 +568,7 @@ class ReportService {
         <strong>Error:</strong> ${issue.description.replace(/\n/g, '<br>')}<br>
         <strong>Steps:</strong> ${issue.reproduction_steps.replace(/\n/g, '<br>')}<br>
         <strong>Action:</strong> ${issue.recommended_action}
+        ${issue.status === 'resolved' ? `<br><strong>Root cause:</strong> ${issue.root_cause || '—'}<br><strong>Resolved:</strong> ${issue.resolved_at}` : ''}
       </div>
     </div>`).join('')}
     ` : '<p style="color:#666; padding: 16px;">No issues detected during the monitoring period.</p>'}
@@ -510,7 +589,7 @@ class ReportService {
           <td>${this._badge(entry.category, entry.category === 'failure' ? 'red' : entry.category === 'observation' ? 'amber' : entry.category === 'restriction' ? 'amber' : 'green')}</td>
           <td>${entry.platform ? entry.platform.toUpperCase() : '—'}</td>
           <td style="max-width: 400px; white-space: normal;">${entry.description}</td>
-          <td>${this._badge(entry.outcome, entry.outcome === 'success' ? 'green' : entry.outcome === 'requires_attention' ? 'red' : 'amber')}</td>
+          <td>${this._badge(entry.outcome, entry.outcome === 'success' || entry.outcome === 'resolved' ? 'green' : entry.outcome === 'requires_attention' ? 'red' : 'amber')}</td>
         </tr>`).join('')}
       </tbody>
     </table>
@@ -518,15 +597,13 @@ class ReportService {
 
   <!-- Recommendations -->
   <div class="section">
-    <h2 class="section-title">Recommendations</h2>
-    ${recommendations.map(rec => `
-    <div class="rec-card ${rec.priority}">
-      <div class="rec-header">
-        <span class="rec-area">${rec.area}</span>
-        ${this._badge(rec.priority, rec.priority === 'high' ? 'red' : rec.priority === 'medium' ? 'amber' : 'green')}
-      </div>
-      <div class="rec-text">${rec.recommendation}</div>
-    </div>`).join('')}
+    <h2 class="section-title">Recommendations from Monitoring</h2>
+    ${recommendations.filter(r => r.type !== 'general').map(rec => this._recCard(rec)).join('') || '<p>No issues found during monitoring.</p>'}
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">General Improvements</h2>
+    ${recommendations.filter(r => r.type === 'general').map(rec => this._recCard(rec)).join('')}
   </div>
 
   <!-- Footer -->
